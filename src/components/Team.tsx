@@ -1,7 +1,8 @@
 import { motion } from 'motion/react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { MessageSquare, Wrench, Handshake, ArrowRight } from 'lucide-react';
-import angeloHomeImage from '../assets/Angelo_home.png';
+import angeloHomeImage from '../assets/angelo-home.webp';
+import { getWieBenIkPath } from '../lib/routes';
 
 const teamMembers = [
   {
@@ -181,12 +182,16 @@ export function Team({ onNavigate }: TeamProps) {
 
             {/* CTA Button - Meer over Angelo */}
             {onNavigate && (
-              <motion.button
+              <motion.a
+                href={getWieBenIkPath()}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.8, delay: 0.5, ease: appleEase }}
-                onClick={() => onNavigate('wie-ben-ik')}
+                onClick={(event) => {
+                  event.preventDefault();
+                  onNavigate('wie-ben-ik');
+                }}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 className="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-black text-white hover:bg-black/90 transition-all duration-300 group"
@@ -203,7 +208,7 @@ export function Team({ onNavigate }: TeamProps) {
                   className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" 
                   strokeWidth={2.5}
                 />
-              </motion.button>
+              </motion.a>
             )}
           </motion.div>
         </div>

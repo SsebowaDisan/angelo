@@ -350,6 +350,8 @@ export function VerhuurPage({ onClose, onNavigate }: VerhuurPageProps) {
                   src={trailerImage1}
                   alt="Angelo Renovates Aanhangwagen"
                   className="w-full h-full object-cover"
+                  loading="lazy"
+                  decoding="async"
                   style={{
                     filter: 'brightness(1.02) contrast(1.03)',
                     maxHeight: '500px',
@@ -421,6 +423,8 @@ export function VerhuurPage({ onClose, onNavigate }: VerhuurPageProps) {
                   src={trailerImage2}
                   alt="Angelo Renovates Aanhangwagen Detail"
                   className="w-full h-full object-cover"
+                  loading="lazy"
+                  decoding="async"
                   style={{
                     filter: 'brightness(1.01) saturate(1.05)',
                   }}
@@ -477,6 +481,8 @@ export function VerhuurPage({ onClose, onNavigate }: VerhuurPageProps) {
                   src={trailerImage3}
                   alt="Angelo Renovates Aanhangwagen Zijaanzicht"
                   className="w-full h-full object-cover"
+                  loading="lazy"
+                  decoding="async"
                   style={{
                     filter: 'brightness(1.01) saturate(1.05)',
                   }}
@@ -1514,7 +1520,7 @@ export function VerhuurPage({ onClose, onNavigate }: VerhuurPageProps) {
       {/* Contact Form Section */}
       <ContactFormSection />
 
-      <Footer hideCTA={true} />
+      <Footer hideCTA={true} onNavigate={onNavigate} />
     </motion.div>
   );
 }

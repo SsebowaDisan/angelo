@@ -1,6 +1,6 @@
 import { motion, useScroll, useTransform } from 'motion/react';
 import { useRef } from 'react';
-import heroImage from 'figma:asset/6aefa67bc1d5ee377e599cabc92a6b57b7143a9a.png';
+import heroImage from '../assets/hero-home.webp';
 
 export function Hero() {
   const heroRef = useRef<HTMLElement>(null);
@@ -32,6 +32,10 @@ export function Hero() {
             src={heroImage}
             alt="Modern house renovation by Angelo Renovates"
             className="w-full h-full object-cover scale-105"
+            width={1920}
+            height={964}
+            fetchPriority="high"
+            decoding="async"
           />
           {/* Sophisticated multi-layer overlay - Apple technique */}
           <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/25 to-black/60"></div>

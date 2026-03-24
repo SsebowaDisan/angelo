@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
 import { Verhuur } from './components/Verhuur';
@@ -17,187 +17,184 @@ import { Contact } from './components/Contact';
 import { ContactPage } from './components/ContactPage';
 import { Footer } from './components/Footer';
 import { getServiceById } from './data/servicesData';
+import { applySeoMetadata } from './lib/seo';
+import {
+  AppRoute,
+  getDienstenPath,
+  getNavigationPage,
+  getRouteForPage,
+  getServiceRoute,
+  getHomePath,
+  resolveRoute,
+} from './lib/routes';
+
+function getInitialRoute() {
+  if (typeof window === 'undefined') {
+    return { name: 'home', path: '/' } satisfies AppRoute;
+  }
+
+  return resolveRoute(window.location.pathname);
+}
 
 export default function App() {
-  const [showVoorwaarden, setShowVoorwaarden] = useState(false);
-  const [showVerhuur, setShowVerhuur] = useState(false);
-  const [showWieBenIk, setShowWieBenIk] = useState(false);
-  const [showDiensten, setShowDiensten] = useState(false);
-  const [showProjecten, setShowProjecten] = useState(false);
-  const [showContact, setShowContact] = useState(false);
-  const [selectedServiceId, setSelectedServiceId] = useState<string | null>(null);
-  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
+  const [route, setRoute] = useState<AppRoute>(getInitialRoute);
 
-  const selectedService = selectedServiceId ? getServiceById(selectedServiceId) : null;
+  const selectedService = route.serviceId ? getServiceById(route.serviceId) : null;
 
-  // Determine current page for navigation state
-  const currentPage = showVerhuur ? 'verhuur' : 
-                     showWieBenIk ? 'wie-ben-ik' : 
-                     showDiensten || selectedServiceId ? 'diensten' : 
-                     showProjecten || selectedProjectId ? 'projecten' :
-                     showContact ? 'contact' :
-                     'home';
+  const navigateToRoute = useCallback(
+    (nextRoute: AppRoute, options?: { replace?: boolean; scroll?: boolean }) => {
+      const { replace = false, scroll = true } = options || {};
 
-  // Handle navigation from header
-  const handleNavigation = useCallback((page: string, projectId?: string) => {
-    // Close all overlays first
-    setShowVerhuur(false);
-    setShowWieBenIk(false);
-    setShowDiensten(false);
-    setShowProjecten(false);
-    setShowContact(false);
-    setSelectedServiceId(null);
-    setSelectedProjectId(null);
-    setShowVoorwaarden(false);
+      setRoute(nextRoute);
 
-    // Navigate based on page
-    switch (page) {
-      case 'wie-ben-ik':
-        setShowWieBenIk(true);
-        break;
-      case 'diensten':
-        setShowDiensten(true);
-        break;
-      case 'verhuur':
-        setShowVerhuur(true);
-        break;
-      case 'projecten':
-        setShowProjecten(true);
-        break;
-      case 'contact':
-        setShowContact(true);
-        break;
-      case 'project-detail':
-        if (projectId) {
-          setSelectedProjectId(projectId);
-        }
-        break;
-      case 'home':
-        // Scroll to top
+      if (window.location.pathname !== nextRoute.path) {
+        const historyMethod = replace ? window.history.replaceState : window.history.pushState;
+        historyMethod.call(window.history, null, '', nextRoute.path);
+      }
+
+      if (scroll) {
+        window.scrollTo({ top: 0, behavior: 'auto' });
+      }
+    },
+    [],
+  );
+
+  const handleNavigation = useCallback(
+    (page: string, projectId?: string) => {
+      if (page === 'home' && route.name === 'home') {
         window.scrollTo({ top: 0, behavior: 'smooth' });
-        break;
-    }
-  }, []);
+        return;
+      }
 
-  // Listen for custom events from overlay pages
+      navigateToRoute(getRouteForPage(page, projectId));
+    },
+    [navigateToRoute, route.name],
+  );
+
+  const handleServiceClick = useCallback(
+    (serviceId: string) => {
+      navigateToRoute(getServiceRoute(serviceId));
+    },
+    [navigateToRoute],
+  );
+
   useEffect(() => {
-    const handleOpenService = (e: CustomEvent) => {
-      setSelectedServiceId(e.detail.serviceId);
+    const handlePopState = () => {
+      setRoute(resolveRoute(window.location.pathname));
+      window.scrollTo({ top: 0, behavior: 'auto' });
     };
 
+    const handleOpenService = (event: Event) => {
+      const customEvent = event as CustomEvent<{ serviceId?: string }>;
+      const serviceId = customEvent.detail?.serviceId;
+
+      if (serviceId) {
+        navigateToRoute(getServiceRoute(serviceId));
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
     window.addEventListener('openService', handleOpenService as EventListener);
+
     return () => {
+      window.removeEventListener('popstate', handlePopState);
       window.removeEventListener('openService', handleOpenService as EventListener);
     };
-  }, []);
+  }, [navigateToRoute]);
 
-  // Check if any overlay is open
-  const isAnyOverlayOpen = showVerhuur || showWieBenIk || showDiensten || showProjecten || showContact || !!selectedServiceId || !!selectedProjectId || showVoorwaarden;
+  useEffect(() => {
+    applySeoMetadata(route);
+  }, [route]);
+
+  if (route.name === 'diensten') {
+    return (
+      <DienstenPage
+        onClose={() => navigateToRoute({ name: 'home', path: getHomePath() })}
+        onServiceClick={handleServiceClick}
+        onNavigate={handleNavigation}
+      />
+    );
+  }
+
+  if (route.name === 'service-detail' && selectedService) {
+    return (
+      <ServiceDetailPage
+        service={selectedService}
+        onClose={() => navigateToRoute({ name: 'diensten', path: getDienstenPath() })}
+        onServiceClick={handleServiceClick}
+        onNavigate={handleNavigation}
+      />
+    );
+  }
+
+  if (route.name === 'verhuur') {
+    return (
+      <VerhuurPage
+        onClose={() => navigateToRoute({ name: 'home', path: getHomePath() })}
+        onNavigate={handleNavigation}
+      />
+    );
+  }
+
+  if (route.name === 'wie-ben-ik') {
+    return (
+      <WieBenIkPage
+        onClose={() => navigateToRoute({ name: 'home', path: getHomePath() })}
+        onNavigate={handleNavigation}
+      />
+    );
+  }
+
+  if (route.name === 'projecten') {
+    return (
+      <ProjectenPage
+        onNavigate={handleNavigation}
+        onClose={() => navigateToRoute({ name: 'home', path: getHomePath() })}
+      />
+    );
+  }
+
+  if (route.name === 'project-detail' && route.projectId) {
+    return <ProjectDetailPage projectId={route.projectId} onNavigate={handleNavigation} />;
+  }
+
+  if (route.name === 'contact') {
+    return (
+      <ContactPage
+        onClose={() => navigateToRoute({ name: 'home', path: getHomePath() })}
+        onNavigate={handleNavigation}
+      />
+    );
+  }
+
+  if (route.name === 'voorwaarden') {
+    return (
+      <VoorwaardenPage
+        onClose={() => navigateToRoute({ name: 'home', path: getHomePath() })}
+        onNavigate={handleNavigation}
+      />
+    );
+  }
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Main Header - Only show when no overlays are open */}
-      {!isAnyOverlayOpen && (
-        <Header 
-          currentPage={currentPage}
-          onNavigate={handleNavigation}
-          onServiceClick={(serviceId) => setSelectedServiceId(serviceId)}
-        />
-      )}
-      
-      {/* Home Section */}
+      <Header
+        currentPage={getNavigationPage(route)}
+        onNavigate={handleNavigation}
+        onServiceClick={handleServiceClick}
+      />
+
       <Hero />
-
-      {/* Team Section - Angelo & Values (Right after Hero) */}
       <Team onNavigate={handleNavigation} />
-
-      {/* Exclusive Technique Section */}
       <ExclusiveTechnique />
-
-      {/* Services Grid - Main Services */}
-      <ServicesGrid onServiceClick={(serviceId) => setSelectedServiceId(serviceId)} />
-
-      {/* Projecten Section */}
-      <Projecten onOpenProjecten={() => setShowProjecten(true)} />
-
-      {/* Verhuur Section */}
-      <Verhuur onOpenVerhuur={() => setShowVerhuur(true)} />
-
-      {/* Contact Section */}
+      <ServicesGrid onServiceClick={handleServiceClick} />
+      <Projecten onOpenProjecten={() => handleNavigation('projecten')} />
+      <Verhuur onOpenVerhuur={() => handleNavigation('verhuur')} />
       <Contact />
-
-      {/* Footer */}
-      <Footer onOpenVoorwaarden={() => setShowVoorwaarden(true)} />
-
-      {/* Voorwaarden Page - Full Screen Overlay */}
-      {showVoorwaarden && (
-        <VoorwaardenPage 
-          onClose={() => setShowVoorwaarden(false)}
-          onNavigate={handleNavigation}
-        />
-      )}
-
-      {/* Verhuur Page - Full Screen Overlay */}
-      {showVerhuur && (
-        <VerhuurPage 
-          onClose={() => setShowVerhuur(false)}
-          onNavigate={handleNavigation}
-        />
-      )}
-
-      {/* Wie Ben Ik Page - Full Screen Overlay */}
-      {showWieBenIk && (
-        <WieBenIkPage 
-          onClose={() => setShowWieBenIk(false)}
-          onNavigate={handleNavigation}
-        />
-      )}
-
-      {/* Diensten Page - Full Screen Overlay */}
-      {showDiensten && (
-        <DienstenPage 
-          onClose={() => setShowDiensten(false)}
-          onServiceClick={(serviceId) => {
-            setShowDiensten(false);
-            setSelectedServiceId(serviceId);
-          }}
-          onNavigate={handleNavigation}
-        />
-      )}
-
-      {/* Service Detail Page - Full Screen Overlay */}
-      {selectedService && (
-        <ServiceDetailPage 
-          service={selectedService} 
-          onClose={() => setSelectedServiceId(null)}
-          onServiceClick={(serviceId) => setSelectedServiceId(serviceId)}
-          onNavigate={handleNavigation}
-        />
-      )}
-
-      {/* Projecten Page - Full Screen Overlay */}
-      {showProjecten && (
-        <ProjectenPage 
-          onNavigate={handleNavigation}
-          onClose={() => setShowProjecten(false)}
-        />
-      )}
-
-      {/* Project Detail Page - Full Screen Overlay */}
-      {selectedProjectId && (
-        <ProjectDetailPage 
-          projectId={selectedProjectId}
-          onNavigate={handleNavigation}
-        />
-      )}
-
-      {/* Contact Page - Full Screen Overlay */}
-      {showContact && (
-        <ContactPage 
-          onClose={() => setShowContact(false)}
-          onNavigate={handleNavigation}
-        />
-      )}
+      <Footer
+        onNavigate={handleNavigation}
+        onOpenVoorwaarden={() => handleNavigation('voorwaarden')}
+      />
     </div>
   );
 }

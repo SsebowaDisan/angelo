@@ -6,7 +6,13 @@
 
   Run `npm i` to install the dependencies.
 
-  Copy `.env.example` to `.env` and fill in SMTP credentials.
+  Copy `.env.example` to `.env`.
+
+  For Microsoft 365, prefer Microsoft Graph and fill in:
+  `GRAPH_TENANT_ID`, `GRAPH_CLIENT_ID`, `GRAPH_CLIENT_SECRET`, and `GRAPH_SENDER`.
+
+  The app will automatically use Microsoft Graph when those variables are set.
+  Otherwise it falls back to SMTP.
 
   Run `npm run dev:full` to start frontend + backend together.
 
@@ -14,5 +20,7 @@
 
   Note: port `3000` must be free for the frontend dev server.
 
-  If you use a Microsoft 365 mailbox and sending fails with SMTP auth disabled, enable SMTP AUTH for that mailbox or use another SMTP provider with app-password support.
+  For Microsoft 365, create an Entra app registration with Microsoft Graph
+  `Mail.Send` application permission and grant admin consent. Basic SMTP
+  username/password auth is no longer sufficient for Microsoft 365.
   

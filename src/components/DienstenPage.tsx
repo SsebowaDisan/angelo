@@ -4,11 +4,12 @@ import { ImageWithFallback } from './figma/ImageWithFallback';
 import { Header } from './Header';
 import { ContactFormSection } from './ContactFormSection';
 import { Footer } from './Footer';
-import vloerwerkzaamhedenImage from '../assets/Vloerwerkzaamheden.png';
-import oprittenTerrassenImage from '../assets/Opritten en terrassen.png';
-import totaleProjectenImage from '../assets/Totale projecten.png';
-import schoorsteenvegenRenovatieImage from '../assets/Schoorsteenvegen en renovatie.png';
-import exclusieveTegelherstellingImage from '../assets/Exclusieve tegelherstelling zonder breekwerk.png';
+import vloerwerkzaamhedenImage from '../assets/vloerwerkzaamheden.webp';
+import oprittenTerrassenImage from '../assets/opritten-terrassen.webp';
+import totaleProjectenImage from '../assets/totale-projecten.webp';
+import schoorsteenvegenRenovatieImage from '../assets/schoorsteenvegen-renovatie.webp';
+import exclusieveTegelherstellingImage from '../assets/tegelherstelling-zonder-breekwerk.webp';
+import { getServicePath } from '../lib/routes';
 
 const services = [
   {
@@ -245,8 +246,12 @@ export function DienstenPage({
                 }}
                 className="group relative"
               >
-                <div 
-                  onClick={() => onServiceClick(service.id)} 
+                <motion.a
+                  href={getServicePath(service.id)}
+                  onClick={(event) => {
+                    event.preventDefault();
+                    onServiceClick(service.id);
+                  }}
                   className="block cursor-pointer"
                 >
                   <motion.div
@@ -359,7 +364,7 @@ export function DienstenPage({
                     {/* Glow effect */}
                     <div className="absolute inset-0 -z-10 rounded-3xl bg-yellow-400/20 blur-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100" style={{ transform: 'scale(0.95)' }} />
                   </motion.div>
-                </div>
+                </motion.a>
               </motion.div>
             ))}
           </div>
@@ -446,7 +451,7 @@ export function DienstenPage({
       <ContactFormSection />
 
       {/* Footer */}
-      <Footer hideCTA={true} />
+      <Footer hideCTA={true} onNavigate={onNavigate} />
     </div>
   );
 }

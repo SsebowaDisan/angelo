@@ -117,6 +117,8 @@ export function ServiceDetailPage({ service, onClose, onServiceClick, onNavigate
             src={service.image}
             alt={service.title}
             className="w-full h-full object-cover"
+            loading="eager"
+            fetchPriority="high"
           />
           {/* Sophisticated Gradient Overlay */}
           <div 
@@ -612,7 +614,7 @@ export function ServiceDetailPage({ service, onClose, onServiceClick, onNavigate
       <ContactFormSection />
 
       {/* Footer */}
-      <Footer hideCTA={true} />
+      <Footer hideCTA={true} onNavigate={onNavigate} />
     </motion.div>
   );
 }

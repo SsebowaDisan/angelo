@@ -1,13 +1,21 @@
 import { motion } from 'motion/react';
 import { Phone, Mail, MapPin, ArrowRight, Star, Facebook, Instagram } from 'lucide-react';
 import logo from 'figma:asset/8cb1fca3c902220c667fee9042542c6d500eb0b2.png';
+import {
+  getContactPath,
+  getHomePath,
+  getPathForPage,
+  getServicePath,
+  getVoorwaardenPath,
+} from '../lib/routes';
 
 interface FooterProps {
   onOpenVoorwaarden?: () => void;
+  onNavigate?: (page: string) => void;
   hideCTA?: boolean;
 }
 
-export function Footer({ onOpenVoorwaarden, hideCTA = false }: FooterProps) {
+export function Footer({ onOpenVoorwaarden, onNavigate, hideCTA = false }: FooterProps) {
   const appleEase = [0.28, 0, 0.4, 1] as const;
 
   const scrollToSection = (id: string) => {
@@ -25,22 +33,51 @@ export function Footer({ onOpenVoorwaarden, hideCTA = false }: FooterProps) {
   };
 
   const navLinks = [
-    { id: 'home', label: 'Home' },
-    { id: 'wat-wij-doen', label: 'Wat wij doen' },
-    { id: 'diensten', label: 'Diensten' },
-    { id: 'verhuur', label: 'Verhuur' },
-    { id: 'projecten', label: 'Projecten' },
-    { id: 'contact', label: 'Contact' },
+    { page: 'home', label: 'Home' },
+    { page: 'wie-ben-ik', label: 'Wie ben ik' },
+    { page: 'diensten', label: 'Diensten' },
+    { page: 'verhuur', label: 'Verhuur' },
+    { page: 'projecten', label: 'Projecten' },
+    { page: 'contact', label: 'Contact' },
   ];
 
   const services = [
-    'Volledige renovaties',
-    'Badkamerrenovatie',
-    'Keukenrenovatie',
-    'Dakwerken',
-    'Muurinjectie tegen opstijgend vocht',
-    'Gyproc & Afwerking',
+    { id: 'renovatiewerkzaamheden', label: 'Volledige renovaties' },
+    { id: 'metselwerk', label: 'Metselwerken' },
+    { id: 'vloerwerkzaamheden', label: 'Vloerwerken' },
+    { id: 'opritten-terrassen', label: 'Opritten en terrassen' },
+    { id: 'muurinjectie-opstijgend-vocht', label: 'Muurinjectie tegen opstijgend vocht' },
+    { id: 'camera-inspectie', label: 'Camera-inspectie' },
   ];
+
+  const navigateToPage = (page: string) => {
+    if (onNavigate) {
+      onNavigate(page);
+      return;
+    }
+
+    if (page === 'home') {
+      if (window.location.pathname === getHomePath()) {
+        scrollToSection('home');
+        return;
+      }
+
+      window.location.href = getHomePath();
+      return;
+    }
+
+    if (page === 'contact') {
+      if (window.location.pathname === getHomePath()) {
+        scrollToSection('contact');
+        return;
+      }
+
+      window.location.href = getContactPath();
+      return;
+    }
+
+    window.location.href = getPathForPage(page);
+  };
 
   return (
     <footer className="relative bg-black text-white overflow-hidden">
@@ -116,7 +153,7 @@ export function Footer({ onOpenVoorwaarden, hideCTA = false }: FooterProps) {
 
             {/* Premium CTA Button */}
             <motion.button
-              onClick={() => scrollToSection('contact')}
+              onClick={() => navigateToPage('contact')}
               className="group relative inline-flex items-center gap-3 overflow-hidden rounded-full"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
@@ -258,14 +295,18 @@ export function Footer({ onOpenVoorwaarden, hideCTA = false }: FooterProps) {
               <ul className="space-y-4">
                 {navLinks.map((link, index) => (
                   <motion.li 
-                    key={link.id}
+                    key={link.page}
                     initial={{ opacity: 0, x: -10 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.5, delay: 0.1 + index * 0.05, ease: appleEase }}
                   >
-                    <motion.button
-                      onClick={() => scrollToSection(link.id)}
+                    <motion.a
+                      href={getPathForPage(link.page)}
+                      onClick={(event) => {
+                        event.preventDefault();
+                        navigateToPage(link.page);
+                      }}
                       className="text-white/50 hover:text-yellow-400 transition-all duration-300 group relative inline-flex items-center gap-2"
                       whileHover={{ x: 4 }}
                       transition={{ duration: 0.2, ease: appleEase }}
@@ -277,7 +318,7 @@ export function Footer({ onOpenVoorwaarden, hideCTA = false }: FooterProps) {
                     >
                       <span className="w-1 h-1 rounded-full bg-white/0 group-hover:bg-yellow-400 transition-colors duration-300" />
                       {link.label}
-                    </motion.button>
+                    </motion.a>
                   </motion.li>
                 ))}
               </ul>
@@ -305,20 +346,34 @@ export function Footer({ onOpenVoorwaarden, hideCTA = false }: FooterProps) {
               <ul className="space-y-4">
                 {services.map((service, index) => (
                   <motion.li 
-                    key={service}
+                    key={service.id}
                     initial={{ opacity: 0, x: -10 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.5, delay: 0.2 + index * 0.05, ease: appleEase }}
-                    className="text-white/50 flex items-start gap-2"
-                    style={{
-                      fontSize: '0.9375rem',
-                      fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif',
-                      fontWeight: 400,
-                    }}
                   >
-                    <span className="w-1 h-1 rounded-full bg-yellow-400/40 mt-2 flex-shrink-0" />
-                    {service}
+                    <motion.a
+                      href={getServicePath(service.id)}
+                      onClick={(event) => {
+                        if (!onNavigate) {
+                          return;
+                        }
+
+                        event.preventDefault();
+                        window.dispatchEvent(new CustomEvent('openService', { detail: { serviceId: service.id } }));
+                      }}
+                      className="text-white/50 hover:text-yellow-400 transition-colors duration-300 flex items-start gap-2"
+                      whileHover={{ x: 4 }}
+                      transition={{ duration: 0.2, ease: appleEase }}
+                      style={{
+                        fontSize: '0.9375rem',
+                        fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif',
+                        fontWeight: 400,
+                      }}
+                    >
+                      <span className="w-1 h-1 rounded-full bg-yellow-400/40 mt-2 flex-shrink-0" />
+                      {service.label}
+                    </motion.a>
                   </motion.li>
                 ))}
               </ul>
@@ -546,11 +601,19 @@ export function Footer({ onOpenVoorwaarden, hideCTA = false }: FooterProps) {
                 <span className="absolute -bottom-1 left-0 w-0 h-px bg-yellow-400 group-hover:w-full transition-all duration-300" />
               </motion.button>
               <div className="w-px h-3 bg-white/10" />
-              <motion.button
+              <motion.a
+                href={getVoorwaardenPath()}
                 className="text-white/30 hover:text-yellow-400 transition-colors duration-300 relative group"
                 whileHover={{ y: -2 }}
                 transition={{ duration: 0.2, ease: appleEase }}
-                onClick={() => onOpenVoorwaarden?.()}
+                onClick={(event) => {
+                  if (!onOpenVoorwaarden) {
+                    return;
+                  }
+
+                  event.preventDefault();
+                  onOpenVoorwaarden();
+                }}
                 style={{
                   fontSize: '0.8125rem',
                   fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif',
@@ -560,13 +623,13 @@ export function Footer({ onOpenVoorwaarden, hideCTA = false }: FooterProps) {
               >
                 Voorwaarden
                 <span className="absolute -bottom-1 left-0 w-0 h-px bg-yellow-400 group-hover:w-full transition-all duration-300" />
-              </motion.button>
+              </motion.a>
               <div className="w-px h-3 bg-white/10" />
               <motion.a
-                href="#home"
+                href={getHomePath()}
                 onClick={(e) => {
                   e.preventDefault();
-                  scrollToSection('home');
+                  navigateToPage('home');
                 }}
                 className="text-white/30 hover:text-yellow-400 transition-colors duration-300 relative group"
                 whileHover={{ y: -2 }}

@@ -5,6 +5,7 @@ import { Header } from './Header';
 import { ContactFormSection } from './ContactFormSection';
 import { Footer } from './Footer';
 import { projects } from '../data/projectsData';
+import { getProjectPath } from '../lib/routes';
 
 interface ProjectenPageProps {
   onNavigate: (page: string, projectId?: string) => void;
@@ -31,6 +32,8 @@ export function ProjectenPage({ onNavigate, onClose }: ProjectenPageProps) {
             src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=2400"
             alt="Construction Projects"
             className="w-full h-full object-cover"
+            loading="eager"
+            fetchPriority="high"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black" />
         </div>
@@ -95,15 +98,19 @@ export function ProjectenPage({ onNavigate, onClose }: ProjectenPageProps) {
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
           >
             {filteredProjects.map((project, index) => (
-              <motion.div
+              <motion.a
                 key={project.id}
+                href={getProjectPath(project.id)}
                 layout
                 initial={{ opacity: 0, y: 40 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 40 }}
                 transition={{ duration: 0.6, delay: index * 0.1, ease: [0.28, 0, 0.4, 1] }}
                 className="group relative cursor-pointer"
-                onClick={() => onNavigate('project-detail', project.id)}
+                onClick={(event) => {
+                  event.preventDefault();
+                  onNavigate('project-detail', project.id);
+                }}
               >
                 {/* Image Container */}
                 <div className="relative aspect-[4/5] overflow-hidden bg-zinc-900">
@@ -203,7 +210,7 @@ export function ProjectenPage({ onNavigate, onClose }: ProjectenPageProps) {
                   <div className="absolute top-4 right-4 w-8 h-8 border-t-2 border-r-2 border-yellow-400 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                   <div className="absolute bottom-4 left-4 w-8 h-8 border-b-2 border-l-2 border-yellow-400 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 </div>
-              </motion.div>
+              </motion.a>
             ))}
           </motion.div>
 
@@ -229,7 +236,7 @@ export function ProjectenPage({ onNavigate, onClose }: ProjectenPageProps) {
       <ContactFormSection />
 
       {/* Footer */}
-      <Footer onOpenVoorwaarden={() => onNavigate('voorwaarden')} />
+      <Footer onNavigate={onNavigate} onOpenVoorwaarden={() => onNavigate('voorwaarden')} />
     </div>
   );
 }

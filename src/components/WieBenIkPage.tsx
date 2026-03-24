@@ -5,7 +5,7 @@ import { ContactFormSection } from './ContactFormSection';
 import { Footer } from './Footer';
 import { useRef, useState, useEffect } from 'react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
-import myHandsYourHomeImage from '../assets/My hands your home.png';
+import myHandsYourHomeImage from '../assets/my-hands-your-home.webp';
 
 interface WieBenIkPageProps {
   onClose: () => void;
@@ -52,6 +52,8 @@ export function WieBenIkPage({ onClose, onNavigate }: WieBenIkPageProps) {
             alt="Angelo - Professional Construction Expert"
             className="w-full h-full object-cover"
             style={{ objectPosition: 'center' }}
+            loading="eager"
+            fetchPriority="high"
           />
           <div className="absolute inset-0 bg-black/30" />
         </div>
@@ -909,7 +911,7 @@ export function WieBenIkPage({ onClose, onNavigate }: WieBenIkPageProps) {
       <ContactFormSection />
 
       {/* FOOTER */}
-      <Footer hideCTA={true} />
+      <Footer hideCTA={true} onNavigate={onNavigate} />
     </motion.div>
   );
 }

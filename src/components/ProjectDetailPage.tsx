@@ -3,6 +3,7 @@ import { ArrowLeft, MapPin, Calendar, Tag } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { useRef } from 'react';
 import { projects } from '../data/projectsData';
+import { getContactPath, getProjectPath, getProjectenPath } from '../lib/routes';
 
 interface ProjectDetailPageProps {
   projectId: string;
@@ -57,6 +58,8 @@ export function ProjectDetailPage({ projectId, onNavigate }: ProjectDetailPagePr
             src={project.heroImage}
             alt={project.title}
             className="w-full h-full object-cover"
+            loading="eager"
+            fetchPriority="high"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black" />
         </motion.div>
@@ -336,13 +339,17 @@ export function ProjectDetailPage({ projectId, onNavigate }: ProjectDetailPagePr
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {relatedProjects.map((relatedProject, index) => (
-                <motion.div
+                <motion.a
                   key={relatedProject.id}
+                  href={getProjectPath(relatedProject.id)}
                   initial={{ opacity: 0, y: 40 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
-                  onClick={() => onNavigate('project-detail', relatedProject.id)}
+                  onClick={(event) => {
+                    event.preventDefault();
+                    onNavigate('project-detail', relatedProject.id);
+                  }}
                   className="group cursor-pointer"
                 >
                   <div className="relative aspect-[4/5] overflow-hidden bg-zinc-800 mb-4">
@@ -368,7 +375,7 @@ export function ProjectDetailPage({ projectId, onNavigate }: ProjectDetailPagePr
                       </h3>
                     </div>
                   </div>
-                </motion.div>
+                </motion.a>
               ))}
             </div>
           </div>
@@ -409,10 +416,14 @@ export function ProjectDetailPage({ projectId, onNavigate }: ProjectDetailPagePr
               Laten we samen uw droomproject realiseren. Neem contact op voor een vrijblijvend gesprek.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <motion.button
+              <motion.a
+                href={getContactPath()}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => onNavigate('contact')}
+                onClick={(event) => {
+                  event.preventDefault();
+                  onNavigate('contact');
+                }}
                 className="px-8 py-4 bg-yellow-400 text-black rounded-full hover:bg-yellow-300 transition-colors duration-300"
                 style={{
                   fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif',
@@ -422,11 +433,15 @@ export function ProjectDetailPage({ projectId, onNavigate }: ProjectDetailPagePr
                 }}
               >
                 Neem Contact Op
-              </motion.button>
-              <motion.button
+              </motion.a>
+              <motion.a
+                href={getProjectenPath()}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => onNavigate('projecten')}
+                onClick={(event) => {
+                  event.preventDefault();
+                  onNavigate('projecten');
+                }}
                 className="px-8 py-4 bg-white/5 text-white rounded-full hover:bg-white/10 border border-white/20 transition-colors duration-300"
                 style={{
                   fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif',
@@ -436,7 +451,7 @@ export function ProjectDetailPage({ projectId, onNavigate }: ProjectDetailPagePr
                 }}
               >
                 Bekijk Alle Projecten
-              </motion.button>
+              </motion.a>
             </div>
           </motion.div>
         </div>

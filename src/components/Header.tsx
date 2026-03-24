@@ -1,8 +1,9 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { MouseEvent as ReactMouseEvent, useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Menu, X, ChevronRight } from 'lucide-react';
 import logo from 'figma:asset/8cb1fca3c902220c667fee9042542c6d500eb0b2.png';
 import { servicesData } from '../data/servicesData';
+import { getHomePath, getPathForPage, getServicePath } from '../lib/routes';
 
 interface HeaderProps {
   currentPage?: 'home' | 'wie-ben-ik' | 'diensten' | 'verhuur' | 'projecten' | 'contact';
@@ -10,6 +11,17 @@ interface HeaderProps {
   onClose?: () => void;
   isOverlay?: boolean;
   onServiceClick?: (serviceId: string) => void;
+}
+
+function shouldHandleClientNavigation(event: ReactMouseEvent<HTMLAnchorElement>) {
+  return (
+    !event.defaultPrevented &&
+    event.button === 0 &&
+    !event.metaKey &&
+    !event.altKey &&
+    !event.ctrlKey &&
+    !event.shiftKey
+  );
 }
 
 export function Header({ 
@@ -150,8 +162,16 @@ export function Header({
         <div className="relative mx-auto px-6 lg:px-8 max-w-[1400px]">
           <nav className="flex items-center justify-between h-20 lg:h-24">
             {/* Logo */}
-            <motion.button 
-              onClick={() => handleNavClick('home')}
+            <motion.a
+              href={getHomePath()}
+              onClick={(event) => {
+                if (!shouldHandleClientNavigation(event)) {
+                  return;
+                }
+
+                event.preventDefault();
+                handleNavClick('home');
+              }}
               className="flex items-center focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded-lg relative z-10"
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
@@ -166,7 +186,7 @@ export function Header({
                   filter: 'drop-shadow(0 4px 12px rgba(251, 191, 36, 0.2))',
                 }}
               />
-            </motion.button>
+            </motion.a>
             
             {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center gap-1">
@@ -183,8 +203,16 @@ export function Header({
                       onMouseEnter={handleDropdownEnter}
                       onMouseLeave={handleDropdownLeave}
                     >
-                      <motion.button
-                        onClick={() => handleNavClick(item.id)}
+                      <motion.a
+                        href={getPathForPage(item.id)}
+                        onClick={(event) => {
+                          if (!shouldHandleClientNavigation(event)) {
+                            return;
+                          }
+
+                          event.preventDefault();
+                          handleNavClick(item.id);
+                        }}
                         className={`relative px-4 py-2 text-[15px] transition-colors duration-200 rounded-lg ${
                           isActive
                             ? 'text-yellow-400'
@@ -216,7 +244,7 @@ export function Header({
                             }}
                           />
                         )}
-                      </motion.button>
+                      </motion.a>
 
                       {/* Dropdown Menu */}
                       <AnimatePresence>
@@ -251,9 +279,17 @@ export function Header({
                             {/* Services Grid */}
                             <div className="p-3 max-h-[500px] overflow-y-auto">
                               {servicesData.map((service, index) => (
-                                <motion.button
+                                <motion.a
                                   key={service.id}
-                                  onClick={() => handleServiceClick(service.id)}
+                                  href={getServicePath(service.id)}
+                                  onClick={(event) => {
+                                    if (!shouldHandleClientNavigation(event)) {
+                                      return;
+                                    }
+
+                                    event.preventDefault();
+                                    handleServiceClick(service.id);
+                                  }}
                                   initial={{ opacity: 0, x: -10 }}
                                   animate={{ opacity: 1, x: 0 }}
                                   transition={{ 
@@ -283,15 +319,23 @@ export function Header({
                                     size={16} 
                                     className="text-white/30 group-hover:text-yellow-400 group-hover:translate-x-1 transition-all duration-200" 
                                   />
-                                </motion.button>
+                                </motion.a>
                               ))}
                             </div>
 
                             {/* Footer - View All */}
                             <div className="px-6 py-4 border-t border-white/10">
-                              <button
-                                onClick={() => handleNavClick('diensten')}
-                                className="w-full py-2.5 rounded-lg text-center text-yellow-400 hover:bg-yellow-400/10 transition-colors duration-200"
+                              <motion.a
+                                href={getPathForPage('diensten')}
+                                onClick={(event) => {
+                                  if (!shouldHandleClientNavigation(event)) {
+                                    return;
+                                  }
+
+                                  event.preventDefault();
+                                  handleNavClick('diensten');
+                                }}
+                                className="block w-full py-2.5 rounded-lg text-center text-yellow-400 hover:bg-yellow-400/10 transition-colors duration-200"
                                 style={{
                                   fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif',
                                   fontWeight: 500,
@@ -300,7 +344,7 @@ export function Header({
                                 }}
                               >
                                 Bekijk alle diensten
-                              </button>
+                              </motion.a>
                             </div>
                           </motion.div>
                         )}
@@ -310,9 +354,17 @@ export function Header({
                 }
                 
                 return (
-                  <motion.button
+                  <motion.a
                     key={item.id}
-                    onClick={() => handleNavClick(item.id)}
+                    href={getPathForPage(item.id)}
+                    onClick={(event) => {
+                      if (!shouldHandleClientNavigation(event)) {
+                        return;
+                      }
+
+                      event.preventDefault();
+                      handleNavClick(item.id);
+                    }}
                     className={`relative px-4 py-2 text-[15px] transition-colors duration-200 rounded-lg ${
                       isActive
                         ? 'text-yellow-400'
@@ -344,7 +396,7 @@ export function Header({
                         }}
                       />
                     )}
-                  </motion.button>
+                  </motion.a>
                 );
               })}
               
@@ -430,8 +482,9 @@ export function Header({
                 const isActive = currentPage === item.id;
                 
                 return (
-                  <motion.button
+                  <motion.a
                     key={item.id}
+                    href={getPathForPage(item.id)}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ 
@@ -439,8 +492,15 @@ export function Header({
                       delay: index * 0.05,
                       ease: [0.28, 0, 0.4, 1]
                     }}
-                    onClick={() => handleNavClick(item.id)}
-                    className={`w-full max-w-sm py-4 px-6 rounded-2xl text-center transition-all duration-200 ${
+                    onClick={(event) => {
+                      if (!shouldHandleClientNavigation(event)) {
+                        return;
+                      }
+
+                      event.preventDefault();
+                      handleNavClick(item.id);
+                    }}
+                    className={`block w-full max-w-sm py-4 px-6 rounded-2xl text-center transition-all duration-200 ${
                       isActive
                         ? 'bg-yellow-400/10 text-yellow-400'
                         : 'text-white/90 hover:text-yellow-400 hover:bg-white/5'
@@ -451,7 +511,7 @@ export function Header({
                     }}
                   >
                     {item.label}
-                  </motion.button>
+                  </motion.a>
                 );
               })}
               
