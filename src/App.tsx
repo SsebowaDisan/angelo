@@ -16,6 +16,7 @@ import { ServiceDetailPage } from './components/ServiceDetailPage';
 import { Contact } from './components/Contact';
 import { ContactPage } from './components/ContactPage';
 import { Footer } from './components/Footer';
+import { ReviewsSection } from './components/ReviewsSection';
 import { getServiceById } from './data/servicesData';
 import { applySeoMetadata } from './lib/seo';
 import {
@@ -189,6 +190,7 @@ export default function App() {
       <ExclusiveTechnique />
       <ServicesGrid onServiceClick={handleServiceClick} />
       <Projecten onOpenProjecten={() => handleNavigation('projecten')} />
+      <ReviewsSection />
       <Verhuur onOpenVerhuur={() => handleNavigation('verhuur')} />
       <Contact />
       <Footer

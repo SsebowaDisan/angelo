@@ -21,9 +21,16 @@ const smtpUser = process.env.SMTP_USER || '';
 const smtpPass = process.env.SMTP_PASS || '';
 const smtpFrom = process.env.SMTP_FROM || smtpUser;
 const smtpSecure = process.env.SMTP_SECURE === 'true';
+const googlePlacesApiKey = process.env.GOOGLE_PLACES_API_KEY || '';
+const googlePlaceId = process.env.GOOGLE_PLACE_ID || '';
+const googlePlacesLanguageCode = process.env.GOOGLE_PLACES_LANGUAGE_CODE || 'nl';
+const googlePlacesRegionCode = process.env.GOOGLE_PLACES_REGION_CODE || 'BE';
+const googleReviewsLimit = Math.max(1, Number(process.env.GOOGLE_REVIEWS_LIMIT || 3));
+const googleReviewsApiBaseUrl = process.env.GOOGLE_PLACES_API_BASE_URL || 'https://places.googleapis.com/v1';
 
 const hasGraphConfig = Boolean(graphTenantId && graphClientId && graphClientSecret && graphSender);
 const hasSmtpConfig = Boolean(smtpUser && smtpPass);
+const hasGoogleReviewsConfig = Boolean(googlePlacesApiKey && googlePlaceId);
 const mailProvider = hasGraphConfig ? 'graph' : hasSmtpConfig ? 'smtp' : 'none';
 const graphTokenEndpoint = graphTenantId
   ? `https://login.microsoftonline.com/${encodeURIComponent(graphTenantId)}/oauth2/v2.0/token`
@@ -31,6 +38,11 @@ const graphTokenEndpoint = graphTenantId
 
 const graphTokenCache = {
   accessToken: '',
+  expiresAt: 0,
+};
+
+const reviewsCache = {
+  data: null,
   expiresAt: 0,
 };
 
@@ -97,6 +109,82 @@ async function getGraphAccessToken() {
   graphTokenCache.expiresAt = now + Math.max((Number(data.expires_in) || 3600) - 300, 60) * 1000;
 
   return graphTokenCache.accessToken;
+}
+
+function sanitizeReviewText(value) {
+  return typeof value === 'string' ? value.trim() : '';
+}
+
+async function getGoogleReviews() {
+  const now = Date.now();
+
+  if (reviewsCache.data && reviewsCache.expiresAt > now) {
+    return reviewsCache.data;
+  }
+
+  const response = await fetch(
+    `${googleReviewsApiBaseUrl}/places/${encodeURIComponent(
+      googlePlaceId,
+    )}?languageCode=${encodeURIComponent(googlePlacesLanguageCode)}&regionCode=${encodeURIComponent(
+      googlePlacesRegionCode,
+    )}`,
+    {
+      headers: {
+        'X-Goog-Api-Key': googlePlacesApiKey,
+        'X-Goog-FieldMask': 'id,displayName,rating,userRatingCount,reviews,googleMapsLinks',
+      },
+    },
+  );
+
+  const data = await response.json().catch(() => null);
+
+  if (!response.ok || !data) {
+    const details =
+      data?.error?.message || `Google Places gaf status ${response.status}.`;
+
+    throw createMailError(
+      'EGOOGLE_REVIEWS',
+      'Google reviews konden niet geladen worden.',
+      response.status || 500,
+      details,
+    );
+  }
+
+  const reviews = Array.isArray(data.reviews)
+    ? data.reviews
+        .map((review) => ({
+          id: review.name || `${review.publishTime || 'review'}-${review.authorAttribution?.displayName || 'anonymous'}`,
+          rating: Number(review.rating || 0),
+          text: sanitizeReviewText(review.text?.text || review.originalText?.text || ''),
+          relativePublishTimeDescription: sanitizeReviewText(review.relativePublishTimeDescription || ''),
+          publishTime: sanitizeReviewText(review.publishTime || ''),
+          googleMapsUri: sanitizeReviewText(review.googleMapsUri || ''),
+          author: {
+            displayName: sanitizeReviewText(review.authorAttribution?.displayName || 'Google reviewer'),
+            uri: sanitizeReviewText(review.authorAttribution?.uri || ''),
+            photoUri: sanitizeReviewText(review.authorAttribution?.photoUri || ''),
+          },
+        }))
+        .filter((review) => review.text)
+        .slice(0, googleReviewsLimit)
+    : [];
+
+  const payload = {
+    provider: 'google',
+    businessName: sanitizeReviewText(data.displayName?.text || 'Angelo Renovates'),
+    rating: Number(data.rating || 0),
+    totalReviews: Number(data.userRatingCount || 0),
+    reviewsUrl:
+      sanitizeReviewText(data.googleMapsLinks?.reviewsUri || '') ||
+      reviews.find((review) => review.googleMapsUri)?.googleMapsUri ||
+      '',
+    reviews,
+  };
+
+  reviewsCache.data = payload;
+  reviewsCache.expiresAt = now + 60 * 60 * 1000;
+
+  return payload;
 }
 
 app.use(
@@ -238,7 +326,27 @@ app.get('/api/health', (_req, res) => {
     mailProvider,
     graphConfigured: hasGraphConfig,
     smtpConfigured: hasSmtpConfig,
+    googleReviewsConfigured: hasGoogleReviewsConfig,
   });
+});
+
+app.get('/api/reviews', async (_req, res) => {
+  if (!hasGoogleReviewsConfig) {
+    return res.status(503).json({
+      message:
+        'Google reviews zijn nog niet geconfigureerd. Voeg GOOGLE_PLACES_API_KEY en GOOGLE_PLACE_ID toe in .env.',
+    });
+  }
+
+  try {
+    const reviews = await getGoogleReviews();
+    return res.json(reviews);
+  } catch (error) {
+    return res.status(error?.status || 500).json({
+      message: error?.message || 'Google reviews konden niet geladen worden.',
+      details: error?.details || '',
+    });
+  }
 });
 
 app.post('/api/contact', async (req, res) => {

@@ -14,9 +14,14 @@
   The app will automatically use Microsoft Graph when those variables are set.
   Otherwise it falls back to SMTP.
 
+  To load live Google reviews on the website, also fill in:
+  `GOOGLE_PLACES_API_KEY` and `GOOGLE_PLACE_ID`.
+  The backend will use Google Places API Place Details to fetch the reviews.
+
   Run `npm run dev:full` to start frontend + backend together.
 
   The contact API will be available at `http://localhost:3001/api/contact`.
+  The reviews API will be available at `http://localhost:3001/api/reviews`.
 
   Note: port `3000` must be free for the frontend dev server.
 

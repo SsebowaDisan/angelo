@@ -1,10 +1,11 @@
 import { motion, useScroll, useTransform } from 'motion/react';
-import { ArrowDown, Award, Target, Heart, Sparkles, Phone, Mail, Star } from 'lucide-react';
+import { ArrowDown, Award, Target, Heart, Sparkles, Phone, Mail } from 'lucide-react';
 import { Header } from './Header';
 import { ContactFormSection } from './ContactFormSection';
 import { Footer } from './Footer';
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState } from 'react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
+import { ReviewsSection } from './ReviewsSection';
 import myHandsYourHomeImage from '../assets/my-hands-your-home.webp';
 
 interface WieBenIkPageProps {
@@ -750,122 +751,7 @@ export function WieBenIkPage({ onClose, onNavigate }: WieBenIkPageProps) {
         </div>
       </section>
 
-      {/* TESTIMONIALS SECTION - Social Proof */}
-      <section 
-        className="py-32 px-6"
-        style={{
-          background: '#F5F5F7',
-        }}
-      >
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: appleEase }}
-            className="text-center mb-20"
-          >
-            <h2
-              style={{
-                fontSize: 'clamp(2.5rem, 5vw, 4rem)',
-                letterSpacing: '-0.04em',
-                color: '#000',
-                marginBottom: '1rem',
-              }}
-            >
-              Wat klanten zeggen
-            </h2>
-            <p
-              style={{
-                fontSize: 'clamp(1.125rem, 2vw, 1.5rem)',
-                color: 'rgba(0, 0, 0, 0.5)',
-              }}
-            >
-              Tevreden klanten zijn mijn beste referentie
-            </p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                name: "Maria V.",
-                location: "Antwerpen",
-                text: "Angelo heeft onze badkamer volledig gerenoveerd. Wat een vakmanschap! Hij denkt mee, werkt netjes en het resultaat overtreft onze verwachtingen. Absolute aanrader!",
-                rating: 5
-              },
-              {
-                name: "Peter D.",
-                location: "Gent",
-                text: "Zeer tevreden over de aanleg van onze nieuwe oprit. Angelo is betrouwbaar, communiceert duidelijk en levert kwaliteitswerk. We gaan zeker weer met hem samenwerken.",
-                rating: 5
-              },
-              {
-                name: "Sarah & Tom",
-                location: "Mechelen",
-                text: "Onze volledige renovatie was in de beste handen bij Angelo. Hij heeft ons door het hele proces geleid met geduld en professionaliteit. Top resultaat!",
-                rating: 5
-              }
-            ].map((testimonial, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{ duration: 0.6, delay: index * 0.15, ease: appleEase }}
-                className="p-8 rounded-3xl"
-                style={{
-                  background: '#FFFFFF',
-                  border: '1px solid rgba(0, 0, 0, 0.06)',
-                }}
-              >
-                {/* Stars */}
-                <div className="flex gap-1 mb-6">
-                  {[...Array(testimonial.rating)].map((_, i) => (
-                    <Star
-                      key={i}
-                      size={20}
-                      className="text-yellow-500 fill-yellow-500"
-                    />
-                  ))}
-                </div>
-
-                {/* Testimonial Text */}
-                <p
-                  className="mb-6"
-                  style={{
-                    fontSize: '1.0625rem',
-                    lineHeight: 1.7,
-                    color: 'rgba(0, 0, 0, 0.7)',
-                  }}
-                >
-                  "{testimonial.text}"
-                </p>
-
-                {/* Author */}
-                <div>
-                  <p
-                    style={{
-                      fontSize: '1rem',
-                      color: '#000',
-                      marginBottom: '0.25rem',
-                    }}
-                  >
-                    {testimonial.name}
-                  </p>
-                  <p
-                    style={{
-                      fontSize: '0.875rem',
-                      color: 'rgba(0, 0, 0, 0.5)',
-                    }}
-                  >
-                    {testimonial.location}
-                  </p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <ReviewsSection />
 
       {/* FINAL CTA SECTION - Clean & Simple */}
       <section 
