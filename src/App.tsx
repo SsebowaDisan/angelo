@@ -1,23 +1,14 @@
-import { useCallback, useEffect, useState } from 'react';
+import { Suspense, lazy, useCallback, useEffect, useState } from 'react';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
 import { Verhuur } from './components/Verhuur';
 import { Projecten } from './components/Projecten';
-import { ProjectenPage } from './components/ProjectenPage';
-import { ProjectDetailPage } from './components/ProjectDetailPage';
 import { Team } from './components/Team';
 import { ExclusiveTechnique } from './components/ExclusiveTechnique';
 import { ServicesGrid } from './components/ServicesGrid';
-import { VoorwaardenPage } from './components/VoorwaardenPage';
-import { VerhuurPage } from './components/VerhuurPage';
-import { WieBenIkPage } from './components/WieBenIkPage';
-import { DienstenPage } from './components/DienstenPage';
-import { ServiceDetailPage } from './components/ServiceDetailPage';
 import { Contact } from './components/Contact';
-import { ContactPage } from './components/ContactPage';
 import { Footer } from './components/Footer';
 import { ReviewsSection } from './components/ReviewsSection';
-import { getServiceById } from './data/servicesData';
 import { applySeoMetadata } from './lib/seo';
 import {
   AppRoute,
@@ -29,6 +20,37 @@ import {
   resolveRoute,
 } from './lib/routes';
 
+const DienstenPage = lazy(() =>
+  import('./components/DienstenPage').then((module) => ({ default: module.DienstenPage })),
+);
+const ServiceDetailPage = lazy(() =>
+  import('./components/ServiceDetailPage').then((module) => ({
+    default: module.ServiceDetailPage,
+  })),
+);
+const VerhuurPage = lazy(() =>
+  import('./components/VerhuurPage').then((module) => ({ default: module.VerhuurPage })),
+);
+const WieBenIkPage = lazy(() =>
+  import('./components/WieBenIkPage').then((module) => ({ default: module.WieBenIkPage })),
+);
+const ProjectenPage = lazy(() =>
+  import('./components/ProjectenPage').then((module) => ({ default: module.ProjectenPage })),
+);
+const ProjectDetailPage = lazy(() =>
+  import('./components/ProjectDetailPage').then((module) => ({
+    default: module.ProjectDetailPage,
+  })),
+);
+const ContactPage = lazy(() =>
+  import('./components/ContactPage').then((module) => ({ default: module.ContactPage })),
+);
+const VoorwaardenPage = lazy(() =>
+  import('./components/VoorwaardenPage').then((module) => ({
+    default: module.VoorwaardenPage,
+  })),
+);
+
 function getInitialRoute() {
   if (typeof window === 'undefined') {
     return { name: 'home', path: '/' } satisfies AppRoute;
@@ -37,10 +59,14 @@ function getInitialRoute() {
   return resolveRoute(window.location.pathname);
 }
 
+function RouteLoadingFallback({ dark = false }: { dark?: boolean }) {
+  return (
+    <div className={`min-h-screen ${dark ? 'bg-black' : 'bg-white'}`} aria-hidden="true" />
+  );
+}
+
 export default function App() {
   const [route, setRoute] = useState<AppRoute>(getInitialRoute);
-
-  const selectedService = route.serviceId ? getServiceById(route.serviceId) : null;
 
   const navigateToRoute = useCallback(
     (nextRoute: AppRoute, options?: { replace?: boolean; scroll?: boolean }) => {
@@ -109,71 +135,89 @@ export default function App() {
 
   if (route.name === 'diensten') {
     return (
-      <DienstenPage
-        onClose={() => navigateToRoute({ name: 'home', path: getHomePath() })}
-        onServiceClick={handleServiceClick}
-        onNavigate={handleNavigation}
-      />
+      <Suspense fallback={<RouteLoadingFallback dark={true} />}>
+        <DienstenPage
+          onClose={() => navigateToRoute({ name: 'home', path: getHomePath() })}
+          onServiceClick={handleServiceClick}
+          onNavigate={handleNavigation}
+        />
+      </Suspense>
     );
   }
 
-  if (route.name === 'service-detail' && selectedService) {
+  if (route.name === 'service-detail' && route.serviceId) {
     return (
-      <ServiceDetailPage
-        service={selectedService}
-        onClose={() => navigateToRoute({ name: 'diensten', path: getDienstenPath() })}
-        onServiceClick={handleServiceClick}
-        onNavigate={handleNavigation}
-      />
+      <Suspense fallback={<RouteLoadingFallback />}>
+        <ServiceDetailPage
+          serviceId={route.serviceId}
+          onClose={() => navigateToRoute({ name: 'diensten', path: getDienstenPath() })}
+          onServiceClick={handleServiceClick}
+          onNavigate={handleNavigation}
+        />
+      </Suspense>
     );
   }
 
   if (route.name === 'verhuur') {
     return (
-      <VerhuurPage
-        onClose={() => navigateToRoute({ name: 'home', path: getHomePath() })}
-        onNavigate={handleNavigation}
-      />
+      <Suspense fallback={<RouteLoadingFallback dark={true} />}>
+        <VerhuurPage
+          onClose={() => navigateToRoute({ name: 'home', path: getHomePath() })}
+          onNavigate={handleNavigation}
+        />
+      </Suspense>
     );
   }
 
   if (route.name === 'wie-ben-ik') {
     return (
-      <WieBenIkPage
-        onClose={() => navigateToRoute({ name: 'home', path: getHomePath() })}
-        onNavigate={handleNavigation}
-      />
+      <Suspense fallback={<RouteLoadingFallback />}>
+        <WieBenIkPage
+          onClose={() => navigateToRoute({ name: 'home', path: getHomePath() })}
+          onNavigate={handleNavigation}
+        />
+      </Suspense>
     );
   }
 
   if (route.name === 'projecten') {
     return (
-      <ProjectenPage
-        onNavigate={handleNavigation}
-        onClose={() => navigateToRoute({ name: 'home', path: getHomePath() })}
-      />
+      <Suspense fallback={<RouteLoadingFallback dark={true} />}>
+        <ProjectenPage
+          onNavigate={handleNavigation}
+          onClose={() => navigateToRoute({ name: 'home', path: getHomePath() })}
+        />
+      </Suspense>
     );
   }
 
   if (route.name === 'project-detail' && route.projectId) {
-    return <ProjectDetailPage projectId={route.projectId} onNavigate={handleNavigation} />;
+    return (
+      <Suspense fallback={<RouteLoadingFallback dark={true} />}>
+        <ProjectDetailPage projectId={route.projectId} onNavigate={handleNavigation} />
+      </Suspense>
+    );
   }
 
   if (route.name === 'contact') {
     return (
-      <ContactPage
-        onClose={() => navigateToRoute({ name: 'home', path: getHomePath() })}
-        onNavigate={handleNavigation}
-      />
+      <Suspense fallback={<RouteLoadingFallback />}>
+        <ContactPage
+          onClose={() => navigateToRoute({ name: 'home', path: getHomePath() })}
+          onNavigate={handleNavigation}
+        />
+      </Suspense>
     );
   }
 
   if (route.name === 'voorwaarden') {
     return (
-      <VoorwaardenPage
-        onClose={() => navigateToRoute({ name: 'home', path: getHomePath() })}
-        onNavigate={handleNavigation}
-      />
+      <Suspense fallback={<RouteLoadingFallback />}>
+        <VoorwaardenPage
+          onClose={() => navigateToRoute({ name: 'home', path: getHomePath() })}
+          onNavigate={handleNavigation}
+        />
+      </Suspense>
     );
   }
 

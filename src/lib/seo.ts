@@ -14,6 +14,7 @@ import {
 
 const DEFAULT_OG_IMAGE = `${SITE_URL}/favicon.svg`;
 const BUSINESS_NAME = 'Angelo Renovates';
+const BUSINESS_SITE_ALTERNATE_NAMES = ['angelorenovates.be'];
 const BUSINESS_EMAIL = 'info@angelorenovates.be';
 const BUSINESS_PHONE = '+32478062748';
 const BUSINESS_VAT_ID = 'BE0817410486';
@@ -23,7 +24,7 @@ const BUSINESS_SOCIALS = [
   'https://www.instagram.com/angelo_renovates?igsh=ZXl6NW9yY3BkYjcx',
 ];
 
-interface SeoDescriptor {
+export interface SeoDescriptor {
   title: string;
   description: string;
   path: string;
@@ -35,8 +36,16 @@ interface BreadcrumbItem {
   path: string;
 }
 
-function getCanonicalUrl(path: string) {
+export function getCanonicalUrl(path: string) {
   return `${SITE_URL}${path === '/' ? '' : path}`;
+}
+
+function getAbsoluteAssetUrl(pathOrUrl: string) {
+  if (/^https?:\/\//.test(pathOrUrl)) {
+    return pathOrUrl;
+  }
+
+  return `${SITE_URL}${pathOrUrl.startsWith('/') ? pathOrUrl : `/${pathOrUrl}`}`;
 }
 
 function ensureMetaAttribute(selector: string, attribute: 'name' | 'property', value: string) {
@@ -76,7 +85,7 @@ function ensureStructuredDataScript() {
   return script;
 }
 
-function getSeoDescriptor(route: AppRoute): SeoDescriptor {
+export function getSeoDescriptor(route: AppRoute): SeoDescriptor {
   switch (route.name) {
     case 'wie-ben-ik':
       return {
@@ -232,6 +241,7 @@ function getStructuredData(route: AppRoute, seo: SeoDescriptor, canonicalUrl: st
       '@id': `${SITE_URL}/#website`,
       url: SITE_URL,
       name: BUSINESS_NAME,
+      alternateName: BUSINESS_SITE_ALTERNATE_NAMES,
     },
     {
       '@type': 'GeneralContractor',
@@ -336,7 +346,7 @@ function getStructuredData(route: AppRoute, seo: SeoDescriptor, canonicalUrl: st
         name: project.title,
         description: project.description,
         url: canonicalUrl,
-        image: [project.heroImage, ...project.images.slice(0, 2)],
+        image: [project.heroImage, ...project.images.slice(0, 2)].map(getAbsoluteAssetUrl),
         creator: {
           '@id': `${SITE_URL}/#business`,
         },
@@ -353,6 +363,12 @@ function getStructuredData(route: AppRoute, seo: SeoDescriptor, canonicalUrl: st
     '@context': 'https://schema.org',
     '@graph': graph,
   };
+}
+
+export function getStructuredDataForRoute(route: AppRoute) {
+  const seo = getSeoDescriptor(route);
+  const canonicalUrl = getCanonicalUrl(seo.path);
+  return getStructuredData(route, seo, canonicalUrl);
 }
 
 export function applySeoMetadata(route: AppRoute) {

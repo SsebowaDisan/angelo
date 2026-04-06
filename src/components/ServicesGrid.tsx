@@ -6,6 +6,7 @@ import oprittenTerrassenImage from '../assets/opritten-terrassen.webp';
 import totaleProjectenImage from '../assets/totale-projecten.webp';
 import schoorsteenvegenRenovatieImage from '../assets/schoorsteenvegen-renovatie.webp';
 import exclusieveTegelherstellingImage from '../assets/tegelherstelling-zonder-breekwerk.webp';
+import { getResponsiveImageProps } from '../lib/images';
 import { getServicePath } from '../lib/routes';
 
 interface ServicesGridProps {
@@ -145,6 +146,10 @@ export function ServicesGrid({ onServiceClick }: ServicesGridProps) {
                           src={service.image}
                           alt={service.title}
                           className="w-full h-full object-cover"
+                          {...getResponsiveImageProps(service.image, {
+                            sizes: '(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw',
+                            widths: [480, 768, 1080, 1600],
+                          })}
                         />
                         
                         {/* Subtle gradient overlay for depth */}

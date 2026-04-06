@@ -6,7 +6,7 @@ import { Footer } from './Footer';
 import { useRef, useState } from 'react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { ReviewsSection } from './ReviewsSection';
-import myHandsYourHomeImage from '../assets/my-hands-your-home.webp';
+import myHandsYourHomeImage from '../assets/angelo-renovates-wie-ben-ik-bouwexpert.webp';
 
 interface WieBenIkPageProps {
   onClose: () => void;
@@ -50,7 +50,7 @@ export function WieBenIkPage({ onClose, onNavigate }: WieBenIkPageProps) {
         <div className="absolute inset-0 w-full h-full">
           <ImageWithFallback 
             src={myHandsYourHomeImage}
-            alt="Angelo - Professional Construction Expert"
+            alt="Angelo Renovates bouwexpert en renovatiespecialist"
             className="w-full h-full object-cover"
             style={{ objectPosition: 'center' }}
             loading="eager"
