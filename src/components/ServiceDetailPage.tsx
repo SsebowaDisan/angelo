@@ -5,6 +5,8 @@ import { ImageWithFallback } from './figma/ImageWithFallback';
 import { Header } from './Header';
 import { Footer } from './Footer';
 import { ContactFormSection } from './ContactFormSection';
+import { getServiceById } from '../data/servicesData';
+import { getResponsiveImageProps } from '../lib/images';
 
 export interface ServiceDetail {
   id: string;
@@ -26,13 +28,19 @@ export interface ServiceDetail {
 }
 
 interface ServiceDetailPageProps {
-  service: ServiceDetail;
+  serviceId: string;
   onClose: () => void;
   onServiceClick?: (serviceId: string) => void;
   onNavigate?: (page: string) => void;
 }
 
-export function ServiceDetailPage({ service, onClose, onServiceClick, onNavigate }: ServiceDetailPageProps) {
+export function ServiceDetailPage({
+  serviceId,
+  onClose,
+  onServiceClick,
+  onNavigate,
+}: ServiceDetailPageProps) {
+  const service = getServiceById(serviceId);
   const [isExiting, setIsExiting] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const appleEase = [0.28, 0, 0.4, 1] as const;
@@ -67,6 +75,19 @@ export function ServiceDetailPage({ service, onClose, onServiceClick, onNavigate
       });
     }
   };
+
+  if (!service) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <p className="text-black">Dienst niet gevonden</p>
+      </div>
+    );
+  }
+
+  const heroImageProps = getResponsiveImageProps(service.image, {
+    sizes: '100vw',
+    widths: [768, 1080, 1600, 2400],
+  });
 
   return (
     <motion.div
@@ -119,6 +140,7 @@ export function ServiceDetailPage({ service, onClose, onServiceClick, onNavigate
             className="w-full h-full object-cover"
             loading="eager"
             fetchPriority="high"
+            {...heroImageProps}
           />
           {/* Sophisticated Gradient Overlay */}
           <div 
@@ -320,16 +342,26 @@ export function ServiceDetailPage({ service, onClose, onServiceClick, onNavigate
                         transition={{ duration: 0.6, ease: appleEase }}
                         className="w-full h-full"
                       >
+                        {(() => {
+                          const sectionImage =
+                            index === 0
+                              ? "https://images.unsplash.com/photo-1697946594607-04d755acff2b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBob3VzZSUyMHJlbm92YXRpb24lMjBpbnRlcmlvcnxlbnwxfHx8fDE3NjE4NTQ3MTF8MA&ixlib=rb-4.1.0&q=80&w=1080"
+                              : index === 1
+                                ? "https://images.unsplash.com/photo-1678803262992-d79d06dd5d96?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb25zdHJ1Y3Rpb24lMjBzaXRlJTIwcHJvZmVzc2lvbmFsfGVufDF8fHx8MTc2MTczNzg3M3ww&ixlib=rb-4.1.0&q=80&w=1080"
+                                : "https://images.unsplash.com/photo-1760030427726-9b1798b7ed2c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhcmNoaXRlY3R1cmFsJTIwYmx1ZXByaW50JTIwcGxhbm5pbmd8ZW58MXx8fHwxNzYxODU0NzEyfDA&ixlib=rb-4.1.0&q=80&w=1080";
+
+                          return (
                         <ImageWithFallback
-                          src={index === 0 
-                            ? "https://images.unsplash.com/photo-1697946594607-04d755acff2b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBob3VzZSUyMHJlbm92YXRpb24lMjBpbnRlcmlvcnxlbnwxfHx8fDE3NjE4NTQ3MTF8MA&ixlib=rb-4.1.0&q=80&w=1080"
-                            : index === 1
-                            ? "https://images.unsplash.com/photo-1678803262992-d79d06dd5d96?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb25zdHJ1Y3Rpb24lMjBzaXRlJTIwcHJvZmVzc2lvbmFsfGVufDF8fHx8MTc2MTczNzg3M3ww&ixlib=rb-4.1.0&q=80&w=1080"
-                            : "https://images.unsplash.com/photo-1760030427726-9b1798b7ed2c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhcmNoaXRlY3R1cmFsJTIwYmx1ZXByaW50JTIwcGxhbm5pbmd8ZW58MXx8fHwxNzYxODU0NzEyfDA&ixlib=rb-4.1.0&q=80&w=1080"
-                          }
+                          src={sectionImage}
                           alt={section.title || 'Service detail'}
                           className="w-full h-full object-cover"
+                          {...getResponsiveImageProps(sectionImage, {
+                            sizes: '(max-width: 1024px) 100vw, 50vw',
+                            widths: [480, 768, 1080, 1600],
+                          })}
                         />
+                          );
+                        })()}
                       </motion.div>
                       
                       {/* Subtle overlay */}
@@ -596,6 +628,10 @@ export function ServiceDetailPage({ service, onClose, onServiceClick, onNavigate
                     src={service.benefits.image}
                     alt={service.benefits.title}
                     className="w-full h-full object-cover"
+                    {...getResponsiveImageProps(service.benefits.image, {
+                      sizes: '100vw',
+                      widths: [768, 1280, 1600, 2400],
+                    })}
                   />
                   <div 
                     className="absolute inset-0"

@@ -14,6 +14,61 @@ export interface Project {
 
 export const projects: Project[] = [
   {
+    id: 'vloerwerken-zwevegem',
+    title: 'Vloerwerken',
+    category: 'Vloeren',
+    location: 'Zwevegem',
+    year: '2026',
+    description:
+      'Vloerwerken in Zwevegem met een strakke plaatsing, duurzame materialen en een nette afwerking die perfect aansluit op de ruimte.',
+    challenge:
+      'Het project vroeg om een nauwkeurige plaatsing en een consistente afwerking zodat het vloerbeeld overal mooi doorloopt en het resultaat jarenlang sterk blijft.',
+    solution:
+      'Met een zorgvuldige voorbereiding van de ondergrond, een precieze plaatsing en aandacht voor details realiseerden we een duurzame vloerafwerking in Zwevegem.',
+    heroImage: '/project-images/vloerwerken-zwevegem/vloerwerken-zwevegem-vloerafwerking-01.webp',
+    images: [
+      '/project-images/vloerwerken-zwevegem/vloerwerken-zwevegem-vloerafwerking-02.webp',
+      '/project-images/vloerwerken-zwevegem/vloerwerken-zwevegem-vloerafwerking-03.webp',
+      '/project-images/vloerwerken-zwevegem/vloerwerken-zwevegem-vloerafwerking-04.webp',
+      '/project-images/vloerwerken-zwevegem/vloerwerken-zwevegem-vloerafwerking-05.webp',
+      '/project-images/vloerwerken-zwevegem/vloerwerken-zwevegem-vloerafwerking-06.webp'
+    ],
+    tags: ['Vloerwerken', 'Zwevegem', 'Afwerking', 'Interieur']
+  },
+  {
+    id: 'renovation-marke',
+    title: 'Renovation',
+    category: 'Renovaties',
+    location: 'Marke',
+    year: '2026',
+    description:
+      'Totaalrenovatie in Marke met een frisse, moderne afwerking en aandacht voor detail in elke fase van de uitvoering.',
+    challenge:
+      'De bestaande ruimtes vroegen om een volledige vernieuwing met een strakke planning, consistente afwerking en een harmonieus eindresultaat.',
+    solution:
+      'Met een doordachte renovatieaanpak, kwalitatieve materialen en nauwkeurige uitvoering werd dit project in Marke omgevormd tot een hedendaagse en duurzame woonomgeving.',
+    heroImage: '/project-images/renovatie-marke/renovatie-marke-totaalrenovatie-06.webp',
+    images: [
+      '/project-images/renovatie-marke/renovatie-marke-totaalrenovatie-01.webp',
+      '/project-images/renovatie-marke/renovatie-marke-totaalrenovatie-02.webp',
+      '/project-images/renovatie-marke/renovatie-marke-totaalrenovatie-03.webp',
+      '/project-images/renovatie-marke/renovatie-marke-totaalrenovatie-04.webp',
+      '/project-images/renovatie-marke/renovatie-marke-totaalrenovatie-05.webp',
+      '/project-images/renovatie-marke/renovatie-marke-totaalrenovatie-07.webp',
+      '/project-images/renovatie-marke/renovatie-marke-totaalrenovatie-08.webp',
+      '/project-images/renovatie-marke/renovatie-marke-totaalrenovatie-09.webp',
+      '/project-images/renovatie-marke/renovatie-marke-totaalrenovatie-10.webp',
+      '/project-images/renovatie-marke/renovatie-marke-totaalrenovatie-11.webp',
+      '/project-images/renovatie-marke/renovatie-marke-totaalrenovatie-12.webp',
+      '/project-images/renovatie-marke/renovatie-marke-totaalrenovatie-13.webp',
+      '/project-images/renovatie-marke/renovatie-marke-totaalrenovatie-14.webp',
+      '/project-images/renovatie-marke/renovatie-marke-totaalrenovatie-15.webp',
+      '/project-images/renovatie-marke/renovatie-marke-totaalrenovatie-16.webp',
+      '/project-images/renovatie-marke/renovatie-marke-totaalrenovatie-17.webp'
+    ],
+    tags: ['Renovatie', 'Marke', 'Afwerking', 'Interieur']
+  },
+  {
     id: 'luxe-badkamer-renovatie',
     title: 'Luxe Badkamerrenovatie',
     category: 'Badkamerrenovaties',
@@ -119,6 +174,7 @@ export const projects: Project[] = [
 
 export const projectCategories = [
   'Alle Projecten',
+  'Renovaties',
   'Badkamerrenovaties',
   'Keukenrenovaties',
   'Interieur',

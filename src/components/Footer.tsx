@@ -1,6 +1,7 @@
 import { motion } from 'motion/react';
 import { Phone, Mail, MapPin, ArrowRight, Star, Facebook, Instagram } from 'lucide-react';
 import logo from 'figma:asset/8cb1fca3c902220c667fee9042542c6d500eb0b2.png';
+import { servicesData } from '../data/servicesData';
 import {
   getContactPath,
   getHomePath,
@@ -39,15 +40,6 @@ export function Footer({ onOpenVoorwaarden, onNavigate, hideCTA = false }: Foote
     { page: 'verhuur', label: 'Verhuur' },
     { page: 'projecten', label: 'Projecten' },
     { page: 'contact', label: 'Contact' },
-  ];
-
-  const services = [
-    { id: 'renovatiewerkzaamheden', label: 'Volledige renovaties' },
-    { id: 'metselwerk', label: 'Metselwerken' },
-    { id: 'vloerwerkzaamheden', label: 'Vloerwerken' },
-    { id: 'opritten-terrassen', label: 'Opritten en terrassen' },
-    { id: 'muurinjectie-opstijgend-vocht', label: 'Muurinjectie tegen opstijgend vocht' },
-    { id: 'camera-inspectie', label: 'Camera-inspectie' },
   ];
 
   const navigateToPage = (page: string) => {
@@ -279,7 +271,7 @@ export function Footer({ onOpenVoorwaarden, onNavigate, hideCTA = false }: Foote
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.1, ease: appleEase }}
-              className="lg:col-span-3"
+              className="lg:col-span-2"
             >
               <h3 
                 className="text-white mb-7"
@@ -330,7 +322,7 @@ export function Footer({ onOpenVoorwaarden, onNavigate, hideCTA = false }: Foote
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.2, ease: appleEase }}
-              className="lg:col-span-2"
+              className="lg:col-span-3"
             >
               <h3 
                 className="text-white mb-7"
@@ -343,8 +335,8 @@ export function Footer({ onOpenVoorwaarden, onNavigate, hideCTA = false }: Foote
               >
                 Diensten
               </h3>
-              <ul className="space-y-4">
-                {services.map((service, index) => (
+              <ul className="grid grid-cols-1 gap-x-8 gap-y-4 sm:grid-cols-2 lg:gap-y-3">
+                {servicesData.map((service, index) => (
                   <motion.li 
                     key={service.id}
                     initial={{ opacity: 0, x: -10 }}
@@ -366,13 +358,14 @@ export function Footer({ onOpenVoorwaarden, onNavigate, hideCTA = false }: Foote
                       whileHover={{ x: 4 }}
                       transition={{ duration: 0.2, ease: appleEase }}
                       style={{
-                        fontSize: '0.9375rem',
+                        fontSize: '0.875rem',
                         fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif',
                         fontWeight: 400,
+                        lineHeight: 1.5,
                       }}
                     >
                       <span className="w-1 h-1 rounded-full bg-yellow-400/40 mt-2 flex-shrink-0" />
-                      {service.label}
+                      {service.title}
                     </motion.a>
                   </motion.li>
                 ))}

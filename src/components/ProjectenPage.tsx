@@ -5,6 +5,7 @@ import { Header } from './Header';
 import { ContactFormSection } from './ContactFormSection';
 import { Footer } from './Footer';
 import { projects } from '../data/projectsData';
+import { getResponsiveImageProps } from '../lib/images';
 import { getProjectPath } from '../lib/routes';
 
 interface ProjectenPageProps {
@@ -34,6 +35,13 @@ export function ProjectenPage({ onNavigate, onClose }: ProjectenPageProps) {
             className="w-full h-full object-cover"
             loading="eager"
             fetchPriority="high"
+            {...getResponsiveImageProps(
+              'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=2400',
+              {
+                sizes: '100vw',
+                widths: [768, 1280, 1600, 2400],
+              },
+            )}
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black" />
         </div>
@@ -116,8 +124,12 @@ export function ProjectenPage({ onNavigate, onClose }: ProjectenPageProps) {
                 <div className="relative aspect-[4/5] overflow-hidden bg-zinc-900">
                   <ImageWithFallback
                     src={project.heroImage}
-                    alt={project.title}
+                    alt={`${project.title} in ${project.location}`}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    {...getResponsiveImageProps(project.heroImage, {
+                      sizes: '(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw',
+                      widths: [480, 768, 1080, 1600],
+                    })}
                   />
                   
                   {/* Gradient Overlay */}

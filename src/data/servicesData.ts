@@ -1,9 +1,16 @@
-import { ServiceDetail } from '../components/ServiceDetailPage';
-import vloerwerkzaamhedenImage from '../assets/vloerwerkzaamheden.webp';
-import oprittenTerrassenImage from '../assets/opritten-terrassen.webp';
-import totaleProjectenImage from '../assets/totale-projecten.webp';
-import schoorsteenvegenRenovatieImage from '../assets/schoorsteenvegen-renovatie.webp';
-import exclusieveTegelherstellingImage from '../assets/tegelherstelling-zonder-breekwerk.webp';
+import type { ServiceDetail } from '../components/ServiceDetailPage';
+
+const vloerwerkzaamhedenImage = new URL('../assets/vloerwerkzaamheden.webp', import.meta.url).href;
+const oprittenTerrassenImage = new URL('../assets/opritten-terrassen.webp', import.meta.url).href;
+const totaleProjectenImage = new URL('../assets/totale-projecten.webp', import.meta.url).href;
+const schoorsteenvegenRenovatieImage = new URL(
+  '../assets/schoorsteenvegen-renovatie.webp',
+  import.meta.url,
+).href;
+const exclusieveTegelherstellingImage = new URL(
+  '../assets/tegelherstelling-zonder-breekwerk.webp',
+  import.meta.url,
+).href;
 
 export const servicesData: ServiceDetail[] = [
   {

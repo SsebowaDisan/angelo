@@ -187,14 +187,26 @@ export function getNavigationPage(route: AppRoute) {
   }
 }
 
-export const sitemapPaths = [
-  getHomePath(),
-  getWieBenIkPath(),
-  getDienstenPath(),
-  getVerhuurPath(),
-  getProjectenPath(),
-  getContactPath(),
-  getVoorwaardenPath(),
-  ...servicesData.map((service) => getServicePath(service.id)),
-  ...projects.map((project) => getProjectPath(project.id)),
-];
+export function getStaticRoutes(): AppRoute[] {
+  return [
+    { name: 'home', path: getHomePath() },
+    { name: 'wie-ben-ik', path: getWieBenIkPath() },
+    { name: 'diensten', path: getDienstenPath() },
+    ...servicesData.map((service) => ({
+      name: 'service-detail' as const,
+      path: getServicePath(service.id),
+      serviceId: service.id,
+    })),
+    { name: 'verhuur', path: getVerhuurPath() },
+    { name: 'projecten', path: getProjectenPath() },
+    ...projects.map((project) => ({
+      name: 'project-detail' as const,
+      path: getProjectPath(project.id),
+      projectId: project.id,
+    })),
+    { name: 'contact', path: getContactPath() },
+    { name: 'voorwaarden', path: getVoorwaardenPath() },
+  ];
+}
+
+export const sitemapPaths = getStaticRoutes().map((route) => route.path);

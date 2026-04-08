@@ -1,6 +1,9 @@
+import { MouseEvent as ReactMouseEvent } from 'react';
 import { motion } from 'motion/react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { ArrowRight } from 'lucide-react';
+import { getResponsiveImageProps } from '../lib/images';
+import { getProjectenPath } from '../lib/routes';
 
 interface ProjectenProps {
   onOpenProjecten?: () => void;
@@ -8,6 +11,27 @@ interface ProjectenProps {
 
 export function Projecten({ onOpenProjecten }: ProjectenProps) {
   const appleEase = [0.28, 0, 0.4, 1] as const;
+  const projectenPath = getProjectenPath();
+
+  const handleProjectenClick = (event: ReactMouseEvent<HTMLAnchorElement>) => {
+    if (!onOpenProjecten) {
+      return;
+    }
+
+    if (
+      event.defaultPrevented ||
+      event.button !== 0 ||
+      event.metaKey ||
+      event.altKey ||
+      event.ctrlKey ||
+      event.shiftKey
+    ) {
+      return;
+    }
+
+    event.preventDefault();
+    onOpenProjecten?.();
+  };
 
   return (
     <section id="projecten" className="relative py-32 bg-black overflow-hidden">
@@ -89,13 +113,14 @@ export function Projecten({ onOpenProjecten }: ProjectenProps) {
         </motion.div>
 
         {/* Single Large Project Card */}
-        <motion.div
+        <motion.a
+          href={projectenPath}
           initial={{ opacity: 0, y: 60 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.9, ease: appleEase }}
-          onClick={onOpenProjecten}
           className="group relative cursor-pointer"
+          onClick={handleProjectenClick}
         >
           {/* Main Container */}
           <div className="relative aspect-[21/10] overflow-hidden rounded-3xl bg-zinc-950">
@@ -105,6 +130,13 @@ export function Projecten({ onOpenProjecten }: ProjectenProps) {
                 src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=2400"
                 alt="Angelo Renovates Projects"
                 className="w-full h-full object-cover transition-all duration-[1.2s] ease-out group-hover:scale-105"
+                {...getResponsiveImageProps(
+                  'https://images.unsplash.com/photo-1503387762-592deb58ef4e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=2400',
+                  {
+                    sizes: '100vw',
+                    widths: [768, 1280, 1600, 2400],
+                  },
+                )}
               />
               {/* Gradient Overlays */}
               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent opacity-90 group-hover:opacity-70 transition-opacity duration-700" />
@@ -268,7 +300,7 @@ export function Projecten({ onOpenProjecten }: ProjectenProps) {
               className="absolute inset-0 bg-gradient-to-br from-yellow-400/0 to-yellow-400/0 group-hover:from-yellow-400/10 group-hover:to-yellow-400/5 transition-all duration-700 pointer-events-none"
             />
           </div>
-        </motion.div>
+        </motion.a>
       </div>
     </section>
   );

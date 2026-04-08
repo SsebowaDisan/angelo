@@ -1,6 +1,7 @@
 import { motion, useScroll, useTransform } from 'motion/react';
 import { useRef } from 'react';
 import heroImage from '../assets/hero-home.webp';
+import heroImageMobile from '../assets/hero-home-mobile.jpg';
 
 export function Hero() {
   const heroRef = useRef<HTMLElement>(null);
@@ -28,15 +29,19 @@ export function Hero() {
         style={{ y }}
       >
         <div className="absolute inset-0">
-          <img 
-            src={heroImage}
-            alt="Modern house renovation by Angelo Renovates"
-            className="w-full h-full object-cover scale-105"
-            width={1920}
-            height={964}
-            fetchPriority="high"
-            decoding="async"
-          />
+          <picture>
+            <source media="(max-width: 767px)" srcSet={heroImageMobile} />
+            <img 
+              src={heroImage}
+              alt="Modern house renovation by Angelo Renovates"
+              className="w-full h-full object-cover scale-105"
+              width={1920}
+              height={964}
+              fetchPriority="high"
+              decoding="async"
+              sizes="100vw"
+            />
+          </picture>
           {/* Sophisticated multi-layer overlay - Apple technique */}
           <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/25 to-black/60"></div>
           {/* Subtle vignette for depth */}
@@ -49,6 +54,22 @@ export function Hero() {
         className="relative z-10 text-center px-6 max-w-[1400px] mx-auto"
         style={{ opacity }}
       >
+        <motion.p
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.12, ease: appleEase }}
+          className="mb-6 text-yellow-400/95"
+          style={{
+            fontSize: 'clamp(0.9rem, 1.8vw, 1.1rem)',
+            fontWeight: 700,
+            letterSpacing: '0.24em',
+            textTransform: 'uppercase',
+            fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif',
+          }}
+        >
+          Angelo Renovates
+        </motion.p>
+
         {/* Headline - Refined Typography */}
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
@@ -118,8 +139,21 @@ export function Hero() {
           My hands your home
         </motion.p>
 
-        {/* Subline - Ultra Subtle */}
-
+        <motion.p
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, delay: 0.72, ease: appleEase }}
+          className="mx-auto mb-10 max-w-3xl text-white/80"
+          style={{
+            fontSize: 'clamp(1rem, 2vw, 1.3rem)',
+            fontWeight: 400,
+            lineHeight: 1.6,
+            letterSpacing: '-0.01em',
+            fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif',
+          }}
+        >
+          Renovatie, vloerwerken en metselwerk in West- en Oost-Vlaanderen.
+        </motion.p>
 
         {/* Refined CTA - Premium Glass Morphism */}
         <motion.div
