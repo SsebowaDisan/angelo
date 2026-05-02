@@ -1,3 +1,27 @@
+const renovationMoorseleImages = Array.from(
+  { length: 9 },
+  (_, index) =>
+    `/project-images/renovation-moorsele/renovation-moorsele-${String(index + 1).padStart(2, '0')}.webp`,
+);
+
+const earthworksBrugesImages = Array.from(
+  { length: 5 },
+  (_, index) =>
+    `/project-images/earthworks-bruges/earthworks-bruges-${String(index + 1).padStart(2, '0')}.webp`,
+);
+
+const wallTilesKortrijkImages = Array.from(
+  { length: 6 },
+  (_, index) =>
+    `/project-images/wall-tiles-kortrijk-pasta-bar-capri/wall-tiles-kortrijk-pasta-bar-capri-${String(index + 1).padStart(2, '0')}.webp`,
+);
+
+const balkonRenovatieMiddelkerkeImages = Array.from(
+  { length: 6 },
+  (_, index) =>
+    `/project-images/balkon-renovatie-middelkerke/balkon-renovatie-middelkerke-${String(index + 1).padStart(2, '0')}.webp`,
+);
+
 export interface Project {
   id: string;
   title: string;
@@ -67,6 +91,70 @@ export const projects: Project[] = [
       '/project-images/renovatie-marke/renovatie-marke-totaalrenovatie-17.webp'
     ],
     tags: ['Renovatie', 'Marke', 'Afwerking', 'Interieur']
+  },
+  {
+    id: 'renovation-moorsele',
+    title: 'Renovation',
+    category: 'Renovaties',
+    location: 'Moorsele',
+    year: '2026',
+    description:
+      'Renovatie in Moorsele met een verzorgde uitvoering, moderne afwerking en aandacht voor detail in elke ruimte.',
+    challenge:
+      'Het project vroeg om een consequente renovatieaanpak waarbij bestaande ruimtes netjes vernieuwd moesten worden zonder in te boeten op afwerking of gebruiksgemak.',
+    solution:
+      'Door een gestructureerde werkwijze, nauwkeurige plaatsing en kwalitatieve afwerking kreeg deze woning in Moorsele een frisse en duurzame renovatie.',
+    heroImage: renovationMoorseleImages[6],
+    images: renovationMoorseleImages,
+    tags: ['Renovatie', 'Moorsele', 'Afwerking', 'Interieur']
+  },
+  {
+    id: 'earthworks-bruges',
+    title: 'Earthworks',
+    category: 'Grondwerken',
+    location: 'Bruges',
+    year: '2026',
+    description:
+      'Grondwerken in Bruges met een zorgvuldige voorbereiding van het terrein en een nette uitvoering als stevige basis voor het verdere project.',
+    challenge:
+      'De werken vroegen om een precieze aanpak waarbij uitgraving, nivellering en voorbereiding correct op elkaar moesten aansluiten.',
+    solution:
+      'Met aangepast materieel, duidelijke fasering en aandacht voor een propere werf werd het terrein in Bruges efficiënt voorbereid voor de volgende bouwfase.',
+    heroImage: earthworksBrugesImages[1],
+    images: earthworksBrugesImages,
+    tags: ['Grondwerken', 'Bruges', 'Terreinvoorbereiding', 'Ruwbouw']
+  },
+  {
+    id: 'wall-tiles-kortrijk-pasta-bar-capri',
+    title: 'Wall tiles',
+    category: 'Wandtegels',
+    location: 'Kortrijk - Pasta Bar Capri',
+    year: '2026',
+    description:
+      'Wandtegelwerken bij Pasta Bar Capri in Kortrijk met een verzorgde plaatsing en een strakke afwerking die past bij de uitstraling van de zaak.',
+    challenge:
+      'De afwerking vroeg om nauwkeurige tegelplaatsing in een commerciële ruimte, met aandacht voor maatvoering, voegen en een consistent eindbeeld.',
+    solution:
+      'Met een nette voorbereiding, precieze plaatsing en zorgvuldige afwerking realiseerden we duurzame wandtegels voor Pasta Bar Capri in Kortrijk.',
+    heroImage: wallTilesKortrijkImages[0],
+    images: wallTilesKortrijkImages,
+    tags: ['Wandtegels', 'Kortrijk', 'Pasta Bar Capri', 'Tegelwerken']
+  },
+  {
+    id: 'balkon-renovatie-middelkerke',
+    title: 'Balkon renovatie',
+    category: 'Balkonrenovaties',
+    location: 'Middelkerke',
+    year: '2026',
+    description:
+      'Balkonrenovatie in Middelkerke met een duurzame opbouw, nette afwerking en aandacht voor waterdichting en gebruikscomfort.',
+    challenge:
+      'Het balkon vroeg om een zorgvuldige renovatie waarbij de ondergrond, afwerking en bescherming tegen weersinvloeden correct op elkaar moesten aansluiten.',
+    solution:
+      'Met een gestructureerde aanpak, degelijke materialen en precieze afwerking werd het balkon in Middelkerke vernieuwd tot een sterk en verzorgd buitenvlak.',
+    heroImage: balkonRenovatieMiddelkerkeImages[0],
+    images: balkonRenovatieMiddelkerkeImages,
+    tags: ['Balkonrenovatie', 'Middelkerke', 'Waterdichting', 'Buitenwerk']
   },
   {
     id: 'luxe-badkamer-renovatie',
@@ -180,5 +268,8 @@ export const projectCategories = [
   'Interieur',
   'Gevels & Buitenwerk',
   'Vloeren',
+  'Balkonrenovaties',
+  'Wandtegels',
+  'Grondwerken',
   'Terrassen & Opritten'
 ];

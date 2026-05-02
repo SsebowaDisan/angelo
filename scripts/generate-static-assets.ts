@@ -4,6 +4,7 @@ import { getStaticRoutes } from '../src/lib/routes';
 import {
   getCanonicalUrl,
   getSeoDescriptor,
+  getSeoImageUrl,
   getStructuredDataForRoute,
 } from '../src/lib/seo';
 
@@ -29,9 +30,31 @@ function replaceTag(html: string, pattern: RegExp, replacement: string, label: s
   return html.replace(pattern, replacement);
 }
 
+function getImagePreloadTags(route: ReturnType<typeof getStaticRoutes>[number], seoImageUrl: string) {
+  if (route.name === 'home') {
+    return null;
+  }
+
+  if (route.name !== 'project-detail' || !seoImageUrl.startsWith(getCanonicalUrl('/'))) {
+    return '';
+  }
+
+  const imagePath = new URL(seoImageUrl).pathname;
+  const imageType = imagePath.endsWith('.webp')
+    ? 'image/webp'
+    : imagePath.endsWith('.jpg') || imagePath.endsWith('.jpeg')
+      ? 'image/jpeg'
+      : undefined;
+  const typeAttribute = imageType ? ` type="${imageType}"` : '';
+
+  return `      <link rel="preload" href="${imagePath}" as="image"${typeAttribute} fetchpriority="high" />`;
+}
+
 function applyRouteMetadata(template: string, route: ReturnType<typeof getStaticRoutes>[number]) {
   const seo = getSeoDescriptor(route);
   const canonicalUrl = getCanonicalUrl(seo.path);
+  const seoImageUrl = getSeoImageUrl(route);
+  const preloadTags = getImagePreloadTags(route, seoImageUrl);
   const escapedTitle = escapeHtml(seo.title);
   const escapedDescription = escapeHtml(seo.description);
   const structuredData = JSON.stringify(getStructuredDataForRoute(route), null, 2).replaceAll(
@@ -40,6 +63,16 @@ function applyRouteMetadata(template: string, route: ReturnType<typeof getStatic
   );
 
   let html = template;
+  if (preloadTags !== null) {
+    html = html.replace(
+      /\s*<link rel="preload" href="[^"]+" as="image"[^>]*fetchpriority="high"\s*\/>/g,
+      '',
+    );
+
+    if (preloadTags) {
+      html = html.replace(/(<link rel="icon"[^>]*>\n)/, `$1${preloadTags}\n`);
+    }
+  }
   html = replaceTag(html, /<title>[\s\S]*?<\/title>/, `<title>${escapedTitle}</title>`, 'title');
   html = replaceTag(
     html,
@@ -79,6 +112,30 @@ function applyRouteMetadata(template: string, route: ReturnType<typeof getStatic
   );
   html = replaceTag(
     html,
+    /<meta property="og:image" content="[^"]*"\s*\/?>/,
+    `<meta property="og:image" content="${seoImageUrl}" />`,
+    'og:image',
+  );
+  html = replaceTag(
+    html,
+    /<meta property="og:image:width" content="[^"]*"\s*\/?>/,
+    '<meta property="og:image:width" content="1200" />',
+    'og:image:width',
+  );
+  html = replaceTag(
+    html,
+    /<meta property="og:image:height" content="[^"]*"\s*\/?>/,
+    '<meta property="og:image:height" content="630" />',
+    'og:image:height',
+  );
+  html = replaceTag(
+    html,
+    /<meta name="twitter:card" content="[^"]*"\s*\/?>/,
+    '<meta name="twitter:card" content="summary_large_image" />',
+    'twitter:card',
+  );
+  html = replaceTag(
+    html,
     /<meta name="twitter:title" content="[^"]*"\s*\/?>/,
     `<meta name="twitter:title" content="${escapedTitle}" />`,
     'twitter:title',
@@ -88,6 +145,12 @@ function applyRouteMetadata(template: string, route: ReturnType<typeof getStatic
     /<meta name="twitter:description" content="[^"]*"\s*\/?>/,
     `<meta name="twitter:description" content="${escapedDescription}" />`,
     'twitter:description',
+  );
+  html = replaceTag(
+    html,
+    /<meta name="twitter:image" content="[^"]*"\s*\/?>/,
+    `<meta name="twitter:image" content="${seoImageUrl}" />`,
+    'twitter:image',
   );
   html = replaceTag(
     html,
@@ -116,7 +179,18 @@ async function writeSitemap(routes: ReturnType<typeof getStaticRoutes>) {
   const entries = routes
     .map((route) => {
       const canonicalUrl = getCanonicalUrl(route.path);
-      return `  <url>\n    <loc>${canonicalUrl}</loc>\n    <lastmod>${BUILD_DATE}</lastmod>\n  </url>`;
+      const priority =
+        route.name === 'home'
+          ? '1.0'
+          : route.name === 'contact'
+            ? '0.9'
+            : route.name === 'service-detail' || route.name === 'project-detail'
+              ? '0.8'
+              : '0.7';
+      const changefreq =
+        route.name === 'project-detail' || route.name === 'voorwaarden' ? 'monthly' : 'weekly';
+
+      return `  <url>\n    <loc>${canonicalUrl}</loc>\n    <lastmod>${BUILD_DATE}</lastmod>\n    <changefreq>${changefreq}</changefreq>\n    <priority>${priority}</priority>\n  </url>`;
     })
     .join('\n');
 

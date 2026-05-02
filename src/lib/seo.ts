@@ -12,7 +12,7 @@ import {
   SITE_URL,
 } from './routes';
 
-const DEFAULT_OG_IMAGE = `${SITE_URL}/favicon.svg`;
+const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.webp`;
 const BUSINESS_NAME = 'Angelo Renovates';
 const BUSINESS_SITE_ALTERNATE_NAMES = ['angelorenovates.be'];
 const BUSINESS_EMAIL = 'info@angelorenovates.be';
@@ -45,7 +45,31 @@ function getAbsoluteAssetUrl(pathOrUrl: string) {
     return pathOrUrl;
   }
 
+  if (pathOrUrl.startsWith('file:')) {
+    return DEFAULT_OG_IMAGE;
+  }
+
   return `${SITE_URL}${pathOrUrl.startsWith('/') ? pathOrUrl : `/${pathOrUrl}`}`;
+}
+
+export function getSeoImageUrl(route: AppRoute) {
+  if (route.name === 'project-detail' && route.projectId) {
+    const project = projects.find((entry) => entry.id === route.projectId);
+
+    if (project?.heroImage) {
+      return getAbsoluteAssetUrl(project.heroImage);
+    }
+  }
+
+  if (route.name === 'service-detail' && route.serviceId) {
+    const service = getServiceById(route.serviceId);
+
+    if (service?.image && !service.image.startsWith('file:')) {
+      return getAbsoluteAssetUrl(service.image);
+    }
+  }
+
+  return DEFAULT_OG_IMAGE;
 }
 
 function ensureMetaAttribute(selector: string, attribute: 'name' | 'property', value: string) {
@@ -235,6 +259,7 @@ function getAreaServedSchema() {
 }
 
 function getStructuredData(route: AppRoute, seo: SeoDescriptor, canonicalUrl: string) {
+  const seoImageUrl = getSeoImageUrl(route);
   const graph: Record<string, unknown>[] = [
     {
       '@type': 'WebSite',
@@ -270,6 +295,10 @@ function getStructuredData(route: AppRoute, seo: SeoDescriptor, canonicalUrl: st
       },
       about: {
         '@id': `${SITE_URL}/#business`,
+      },
+      primaryImageOfPage: {
+        '@type': 'ImageObject',
+        url: seoImageUrl,
       },
     },
   ];
@@ -340,13 +369,17 @@ function getStructuredData(route: AppRoute, seo: SeoDescriptor, canonicalUrl: st
       : undefined;
 
     if (project) {
+      const projectImages = Array.from(
+        new Set([project.heroImage, ...project.images.slice(0, 2)].map(getAbsoluteAssetUrl)),
+      );
+
       graph.push({
         '@type': 'CreativeWork',
         '@id': `${canonicalUrl}#project`,
         name: project.title,
         description: project.description,
         url: canonicalUrl,
-        image: [project.heroImage, ...project.images.slice(0, 2)].map(getAbsoluteAssetUrl),
+        image: projectImages,
         creator: {
           '@id': `${SITE_URL}/#business`,
         },
@@ -374,6 +407,7 @@ export function getStructuredDataForRoute(route: AppRoute) {
 export function applySeoMetadata(route: AppRoute) {
   const seo = getSeoDescriptor(route);
   const canonicalUrl = getCanonicalUrl(seo.path);
+  const seoImageUrl = getSeoImageUrl(route);
 
   document.title = seo.title;
   document.documentElement.lang = 'nl';
@@ -389,13 +423,17 @@ export function applySeoMetadata(route: AppRoute) {
   ensureMetaAttribute('meta[property="og:site_name"]', 'property', 'og:site_name').content =
     BUSINESS_NAME;
   ensureMetaAttribute('meta[property="og:locale"]', 'property', 'og:locale').content = 'nl_BE';
-  ensureMetaAttribute('meta[property="og:image"]', 'property', 'og:image').content = DEFAULT_OG_IMAGE;
-  ensureMetaAttribute('meta[name="twitter:card"]', 'name', 'twitter:card').content = 'summary';
+  ensureMetaAttribute('meta[property="og:image"]', 'property', 'og:image').content = seoImageUrl;
+  ensureMetaAttribute('meta[property="og:image:width"]', 'property', 'og:image:width').content =
+    '1200';
+  ensureMetaAttribute('meta[property="og:image:height"]', 'property', 'og:image:height').content =
+    '630';
+  ensureMetaAttribute('meta[name="twitter:card"]', 'name', 'twitter:card').content =
+    'summary_large_image';
   ensureMetaAttribute('meta[name="twitter:title"]', 'name', 'twitter:title').content = seo.title;
   ensureMetaAttribute('meta[name="twitter:description"]', 'name', 'twitter:description').content =
     seo.description;
-  ensureMetaAttribute('meta[name="twitter:image"]', 'name', 'twitter:image').content =
-    DEFAULT_OG_IMAGE;
+  ensureMetaAttribute('meta[name="twitter:image"]', 'name', 'twitter:image').content = seoImageUrl;
   ensureLink('link[rel="canonical"]', 'canonical').href = canonicalUrl;
   ensureStructuredDataScript().textContent = JSON.stringify(
     getStructuredData(route, seo, canonicalUrl),
