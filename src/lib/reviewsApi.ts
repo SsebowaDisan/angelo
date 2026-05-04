@@ -38,7 +38,7 @@ export async function fetchGoogleReviews(): Promise<ReviewsApiResponse> {
   }
 
   if (!response.ok) {
-    throw new Error(data?.message ?? 'Google reviews konden niet geladen worden.');
+    throw new Error(data?.message ?? 'Google-reviews konden niet geladen worden.');
   }
 
   return data as ReviewsApiResponse;

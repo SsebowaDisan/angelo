@@ -192,7 +192,7 @@ export function ContactPage({ onClose, onNavigate }: ContactPageProps) {
                     letterSpacing: '-0.02em',
                   }}
                 >
-                  Direct Contact
+                  Direct contact
                 </h2>
 
                 {/* Email Card */}

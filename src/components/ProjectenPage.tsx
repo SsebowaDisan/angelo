@@ -31,7 +31,7 @@ export function ProjectenPage({ onNavigate, onClose }: ProjectenPageProps) {
         <div className="absolute inset-0">
           <ImageWithFallback
             src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=2400"
-            alt="Construction Projects"
+            alt="Renovatieprojecten van Angelo Renovates"
             className="w-full h-full object-cover"
             loading="eager"
             fetchPriority="high"
@@ -206,7 +206,7 @@ export function ProjectenPage({ onNavigate, onClose }: ProjectenPageProps) {
                             letterSpacing: '-0.022em',
                           }}
                         >
-                          Lees Meer
+                          Lees meer
                         </span>
                         <motion.div
                           animate={{ x: [0, 5, 0] }}

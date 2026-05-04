@@ -354,7 +354,7 @@ export function ProjectDetailPage({ projectId, onNavigate }: ProjectDetailPagePr
               letterSpacing: '-0.02em',
             }}
           >
-            Project Gallery
+            Projectgalerij
           </motion.h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -455,7 +455,7 @@ export function ProjectDetailPage({ projectId, onNavigate }: ProjectDetailPagePr
                   letterSpacing: '-0.022em',
                 }}
               >
-                Neem Contact Op
+                Neem contact op
               </motion.a>
               <motion.a
                 href={getProjectenPath()}
@@ -473,7 +473,7 @@ export function ProjectDetailPage({ projectId, onNavigate }: ProjectDetailPagePr
                   letterSpacing: '-0.022em',
                 }}
               >
-                Bekijk Alle Projecten
+                Bekijk alle projecten
               </motion.a>
             </div>
           </motion.div>

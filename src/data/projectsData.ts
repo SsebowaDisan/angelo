@@ -61,7 +61,7 @@ export const projects: Project[] = [
   },
   {
     id: 'renovation-marke',
-    title: 'Renovation',
+    title: 'Renovatie',
     category: 'Renovaties',
     location: 'Marke',
     year: '2026',
@@ -94,7 +94,7 @@ export const projects: Project[] = [
   },
   {
     id: 'renovation-moorsele',
-    title: 'Renovation',
+    title: 'Renovatie',
     category: 'Renovaties',
     location: 'Moorsele',
     year: '2026',
@@ -110,23 +110,23 @@ export const projects: Project[] = [
   },
   {
     id: 'earthworks-bruges',
-    title: 'Earthworks',
+    title: 'Grondwerken',
     category: 'Grondwerken',
-    location: 'Bruges',
+    location: 'Brugge',
     year: '2026',
     description:
-      'Grondwerken in Bruges met een zorgvuldige voorbereiding van het terrein en een nette uitvoering als stevige basis voor het verdere project.',
+      'Grondwerken in Brugge met een zorgvuldige voorbereiding van het terrein en een nette uitvoering als stevige basis voor het verdere project.',
     challenge:
       'De werken vroegen om een precieze aanpak waarbij uitgraving, nivellering en voorbereiding correct op elkaar moesten aansluiten.',
     solution:
-      'Met aangepast materieel, duidelijke fasering en aandacht voor een propere werf werd het terrein in Bruges efficiënt voorbereid voor de volgende bouwfase.',
+      'Met aangepast materieel, duidelijke fasering en aandacht voor een propere werf werd het terrein in Brugge efficiënt voorbereid voor de volgende bouwfase.',
     heroImage: earthworksBrugesImages[1],
     images: earthworksBrugesImages,
-    tags: ['Grondwerken', 'Bruges', 'Terreinvoorbereiding', 'Ruwbouw']
+    tags: ['Grondwerken', 'Brugge', 'Terreinvoorbereiding', 'Ruwbouw']
   },
   {
     id: 'wall-tiles-kortrijk-pasta-bar-capri',
-    title: 'Wall tiles',
+    title: 'Wandtegels',
     category: 'Wandtegels',
     location: 'Kortrijk - Pasta Bar Capri',
     year: '2026',
