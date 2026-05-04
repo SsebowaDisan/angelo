@@ -1,14 +1,6 @@
-import { Suspense, lazy, useCallback, useEffect, useState } from 'react';
+import { Suspense, lazy, useCallback, useEffect, useRef, useState } from 'react';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
-import { Verhuur } from './components/Verhuur';
-import { Projecten } from './components/Projecten';
-import { Team } from './components/Team';
-import { ExclusiveTechnique } from './components/ExclusiveTechnique';
-import { ServicesGrid } from './components/ServicesGrid';
-import { Contact } from './components/Contact';
-import { Footer } from './components/Footer';
-import { ReviewsSection } from './components/ReviewsSection';
 import { applySeoMetadata } from './lib/seo';
 import {
   AppRoute,
@@ -53,6 +45,30 @@ const VoorwaardenPage = lazy(() =>
     default: module.VoorwaardenPage,
   })),
 );
+const Team = lazy(() => import('./components/Team').then((module) => ({ default: module.Team })));
+const ExclusiveTechnique = lazy(() =>
+  import('./components/ExclusiveTechnique').then((module) => ({
+    default: module.ExclusiveTechnique,
+  })),
+);
+const ServicesGrid = lazy(() =>
+  import('./components/ServicesGrid').then((module) => ({ default: module.ServicesGrid })),
+);
+const Projecten = lazy(() =>
+  import('./components/Projecten').then((module) => ({ default: module.Projecten })),
+);
+const ReviewsSection = lazy(() =>
+  import('./components/ReviewsSection').then((module) => ({ default: module.ReviewsSection })),
+);
+const Verhuur = lazy(() =>
+  import('./components/Verhuur').then((module) => ({ default: module.Verhuur })),
+);
+const Contact = lazy(() =>
+  import('./components/Contact').then((module) => ({ default: module.Contact })),
+);
+const Footer = lazy(() =>
+  import('./components/Footer').then((module) => ({ default: module.Footer })),
+);
 
 function getInitialRoute() {
   if (typeof window === 'undefined') {
@@ -65,6 +81,64 @@ function getInitialRoute() {
 function RouteLoadingFallback({ dark = false }: { dark?: boolean }) {
   return (
     <div className={`min-h-screen ${dark ? 'bg-black' : 'bg-white'}`} aria-hidden="true" />
+  );
+}
+
+function HomepageSections({
+  onNavigate,
+  onServiceClick,
+}: {
+  onNavigate: (page: string, projectId?: string) => void;
+  onServiceClick: (serviceId: string) => void;
+}) {
+  const sentinelRef = useRef<HTMLDivElement | null>(null);
+  const [shouldLoadSections, setShouldLoadSections] = useState(false);
+
+  useEffect(() => {
+    if (shouldLoadSections) {
+      return;
+    }
+
+    const sentinel = sentinelRef.current;
+    if (!sentinel || !('IntersectionObserver' in window)) {
+      const timeoutId = window.setTimeout(() => setShouldLoadSections(true), 1600);
+      return () => window.clearTimeout(timeoutId);
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setShouldLoadSections(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: '700px 0px' },
+    );
+
+    observer.observe(sentinel);
+
+    return () => observer.disconnect();
+  }, [shouldLoadSections]);
+
+  return (
+    <>
+      <div ref={sentinelRef} className="h-px bg-black" aria-hidden="true" />
+      {shouldLoadSections ? (
+        <Suspense fallback={<div className="min-h-[60vh] bg-white" aria-hidden="true" />}>
+          <Team onNavigate={onNavigate} />
+          <ExclusiveTechnique />
+          <ServicesGrid onServiceClick={onServiceClick} />
+          <Projecten onOpenProjecten={() => onNavigate('projecten')} />
+          <ReviewsSection />
+          <Verhuur onOpenVerhuur={() => onNavigate('verhuur')} />
+          <Contact />
+          <Footer
+            onNavigate={onNavigate}
+            onOpenVoorwaarden={() => onNavigate('voorwaarden')}
+          />
+        </Suspense>
+      ) : null}
+    </>
   );
 }
 
@@ -241,17 +315,7 @@ export default function App() {
       />
 
       <Hero />
-      <Team onNavigate={handleNavigation} />
-      <ExclusiveTechnique />
-      <ServicesGrid onServiceClick={handleServiceClick} />
-      <Projecten onOpenProjecten={() => handleNavigation('projecten')} />
-      <ReviewsSection />
-      <Verhuur onOpenVerhuur={() => handleNavigation('verhuur')} />
-      <Contact />
-      <Footer
-        onNavigate={handleNavigation}
-        onOpenVoorwaarden={() => handleNavigation('voorwaarden')}
-      />
+      <HomepageSections onNavigate={handleNavigation} onServiceClick={handleServiceClick} />
     </div>
   );
 }
