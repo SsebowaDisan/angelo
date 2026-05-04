@@ -181,7 +181,7 @@ export function Header({
               <img 
                 src={logo} 
                 alt="Angelo Renovates" 
-                className="h-16 w-auto lg:h-24 brightness-110"
+                className="h-auto w-[150px] brightness-110 sm:w-[170px] lg:w-[190px]"
                 width={4077}
                 height={2132}
                 decoding="async"
