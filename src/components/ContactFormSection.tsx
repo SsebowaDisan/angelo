@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { useState } from 'react';
 import { Mail, Phone, FileText, MapPin, CheckCircle2, Sparkles } from 'lucide-react';
 import { sendContactMessage } from '../lib/contactApi';
+import { getBedanktPath } from '../lib/routes';
 
 export function ContactFormSection() {
   const [formData, setFormData] = useState({
@@ -24,13 +25,7 @@ export function ContactFormSection() {
 
     try {
       await sendContactMessage(formData);
-      setSubmitted(true);
-
-      // Reset form after 4 seconds
-      setTimeout(() => {
-        setSubmitted(false);
-        setFormData({ name: '', email: '', phone: '', message: '' });
-      }, 4000);
+      window.location.assign(getBedanktPath());
     } catch (error) {
       if (error instanceof Error) {
         setSubmitError(error.message);

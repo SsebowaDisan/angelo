@@ -82,6 +82,12 @@ function applyRouteMetadata(template: string, route: ReturnType<typeof getStatic
   );
   html = replaceTag(
     html,
+    /<meta name="robots" content="[^"]*"\s*\/?>/,
+    `<meta name="robots" content="${seo.robots || 'index,follow'}" />`,
+    'meta robots',
+  );
+  html = replaceTag(
+    html,
     /<link rel="canonical" href="[^"]*"\s*\/?>/,
     `<link rel="canonical" href="${canonicalUrl}" />`,
     'canonical link',
@@ -177,6 +183,7 @@ async function writeRouteHtml(
 
 async function writeSitemap(routes: ReturnType<typeof getStaticRoutes>) {
   const entries = routes
+    .filter((route) => route.name !== 'bedankt')
     .map((route) => {
       const canonicalUrl = getCanonicalUrl(route.path);
       const priority =

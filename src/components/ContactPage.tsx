@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Mail, Phone, MapPin, CheckCircle2, Sparkles, FileText, ArrowRight, Clock, X } from 'lucide-react';
 import { Header } from './Header';
 import { sendContactMessage } from '../lib/contactApi';
+import { getBedanktPath } from '../lib/routes';
 
 interface ContactPageProps {
   onClose: () => void;
@@ -30,13 +31,7 @@ export function ContactPage({ onClose, onNavigate }: ContactPageProps) {
 
     try {
       await sendContactMessage(formData);
-      setSubmitted(true);
-
-      // Reset form after 4 seconds
-      setTimeout(() => {
-        setSubmitted(false);
-        setFormData({ name: '', email: '', phone: '', message: '' });
-      }, 4000);
+      window.location.assign(getBedanktPath());
     } catch (error) {
       if (error instanceof Error) {
         setSubmitError(error.message);

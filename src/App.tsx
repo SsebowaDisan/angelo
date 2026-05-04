@@ -45,6 +45,9 @@ const ProjectDetailPage = lazy(() =>
 const ContactPage = lazy(() =>
   import('./components/ContactPage').then((module) => ({ default: module.ContactPage })),
 );
+const BedanktPage = lazy(() =>
+  import('./components/BedanktPage').then((module) => ({ default: module.BedanktPage })),
+);
 const VoorwaardenPage = lazy(() =>
   import('./components/VoorwaardenPage').then((module) => ({
     default: module.VoorwaardenPage,
@@ -206,6 +209,14 @@ export default function App() {
           onClose={() => navigateToRoute({ name: 'home', path: getHomePath() })}
           onNavigate={handleNavigation}
         />
+      </Suspense>
+    );
+  }
+
+  if (route.name === 'bedankt') {
+    return (
+      <Suspense fallback={<RouteLoadingFallback />}>
+        <BedanktPage onNavigate={handleNavigation} />
       </Suspense>
     );
   }

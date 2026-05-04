@@ -12,6 +12,7 @@ export type RouteName =
   | 'projecten'
   | 'project-detail'
   | 'contact'
+  | 'bedankt'
   | 'voorwaarden';
 
 export interface AppRoute {
@@ -53,6 +54,10 @@ export function getContactPath() {
   return '/contact';
 }
 
+export function getBedanktPath() {
+  return '/bedankt';
+}
+
 export function getVoorwaardenPath() {
   return '/algemene-voorwaarden';
 }
@@ -73,6 +78,8 @@ export function getPathForPage(page: string, itemId?: string) {
       return itemId ? getProjectPath(itemId) : getProjectenPath();
     case 'contact':
       return getContactPath();
+    case 'bedankt':
+      return getBedanktPath();
     case 'voorwaarden':
       return getVoorwaardenPath();
     default:
@@ -96,6 +103,8 @@ export function getRouteForPage(page: string, itemId?: string): AppRoute {
         : { name: 'projecten', path: getProjectenPath() };
     case 'contact':
       return { name: 'contact', path: getContactPath() };
+    case 'bedankt':
+      return { name: 'bedankt', path: getBedanktPath() };
     case 'voorwaarden':
       return { name: 'voorwaarden', path: getVoorwaardenPath() };
     case 'home':
@@ -161,6 +170,10 @@ export function resolveRoute(pathname: string): AppRoute {
     return { name: 'contact', path: normalizedPath };
   }
 
+  if (normalizedPath === getBedanktPath()) {
+    return { name: 'bedankt', path: normalizedPath };
+  }
+
   if (normalizedPath === getVoorwaardenPath()) {
     return { name: 'voorwaarden', path: normalizedPath };
   }
@@ -181,6 +194,8 @@ export function getNavigationPage(route: AppRoute) {
     case 'verhuur':
       return 'verhuur';
     case 'contact':
+      return 'contact';
+    case 'bedankt':
       return 'contact';
     default:
       return 'home';
@@ -205,8 +220,11 @@ export function getStaticRoutes(): AppRoute[] {
       projectId: project.id,
     })),
     { name: 'contact', path: getContactPath() },
+    { name: 'bedankt', path: getBedanktPath() },
     { name: 'voorwaarden', path: getVoorwaardenPath() },
   ];
 }
 
-export const sitemapPaths = getStaticRoutes().map((route) => route.path);
+export const sitemapPaths = getStaticRoutes()
+  .filter((route) => route.name !== 'bedankt')
+  .map((route) => route.path);

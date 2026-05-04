@@ -3,6 +3,7 @@ import { getServiceById, servicesData } from '../data/servicesData';
 import {
   AppRoute,
   getContactPath,
+  getBedanktPath,
   getDienstenPath,
   getHomePath,
   getProjectenPath,
@@ -29,6 +30,7 @@ export interface SeoDescriptor {
   description: string;
   path: string;
   type?: 'website' | 'article';
+  robots?: string;
 }
 
 interface BreadcrumbItem {
@@ -174,6 +176,14 @@ export function getSeoDescriptor(route: AppRoute): SeoDescriptor {
           'Neem contact op met Angelo Renovates voor renovaties, metselwerken, vloerwerken en totaalprojecten. Vraag snel een vrijblijvende offerte aan.',
         path: route.path,
       };
+    case 'bedankt':
+      return {
+        title: 'Bedankt voor uw bericht | Angelo Renovates',
+        description:
+          'Bedankt voor uw bericht aan Angelo Renovates. Wij hebben uw aanvraag goed ontvangen en nemen zo snel mogelijk contact op.',
+        path: getBedanktPath(),
+        robots: 'noindex,nofollow',
+      };
     case 'voorwaarden':
       return {
         title: 'Algemene Voorwaarden | Angelo Renovates',
@@ -228,6 +238,9 @@ function getBreadcrumbs(route: AppRoute): BreadcrumbItem[] {
     }
     case 'contact':
       breadcrumbs.push({ name: 'Contact', path: getContactPath() });
+      break;
+    case 'bedankt':
+      breadcrumbs.push({ name: 'Bedankt', path: getBedanktPath() });
       break;
     case 'voorwaarden':
       breadcrumbs.push({ name: 'Algemene voorwaarden', path: getVoorwaardenPath() });
@@ -413,7 +426,8 @@ export function applySeoMetadata(route: AppRoute) {
   document.documentElement.lang = 'nl';
 
   ensureMetaAttribute('meta[name="description"]', 'name', 'description').content = seo.description;
-  ensureMetaAttribute('meta[name="robots"]', 'name', 'robots').content = 'index,follow';
+  ensureMetaAttribute('meta[name="robots"]', 'name', 'robots').content =
+    seo.robots || 'index,follow';
   ensureMetaAttribute('meta[property="og:title"]', 'property', 'og:title').content = seo.title;
   ensureMetaAttribute('meta[property="og:description"]', 'property', 'og:description').content =
     seo.description;
