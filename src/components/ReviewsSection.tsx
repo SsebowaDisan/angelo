@@ -215,6 +215,8 @@ export function ReviewsSection() {
                         src={review.authorPhotoUri}
                         alt={review.name}
                         className="w-10 h-10 rounded-full object-cover"
+                        width={40}
+                        height={40}
                         loading="lazy"
                         decoding="async"
                         referrerPolicy="no-referrer"
