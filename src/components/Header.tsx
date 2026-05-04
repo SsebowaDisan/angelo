@@ -181,10 +181,7 @@ export function Header({
               <img 
                 src={logo} 
                 alt="Angelo Renovates" 
-                className="h-auto w-[150px] brightness-110 sm:w-[170px] lg:w-[190px]"
-                width={4077}
-                height={2132}
-                decoding="async"
+                className="h-16 lg:h-24 brightness-110"
                 style={{
                   filter: 'drop-shadow(0 4px 12px rgba(251, 191, 36, 0.2))',
                 }}
