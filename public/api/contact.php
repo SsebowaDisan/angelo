@@ -68,6 +68,8 @@ if (reject_header_injection($name)) {
 }
 
 $recipient = 'info@angelorenovates.be';
+$sender = 'info@angelorenovates.be';
+$mailReturnPath = '-f' . $sender;
 $subject = 'Nieuwe contactaanvraag van ' . $name;
 $safePhone = $phone !== '' ? $phone : 'Niet opgegeven';
 
@@ -83,14 +85,15 @@ $body = implode("\n", [
 ]);
 
 $headers = [
-    'From: Angelo Renovates <noreply@angelorenovates.be>',
+    'From: Angelo Renovates <info@angelorenovates.be>',
     'Reply-To: ' . $email,
     'MIME-Version: 1.0',
     'Content-Type: text/plain; charset=UTF-8',
     'Content-Transfer-Encoding: 8bit',
+    'X-Mailer: PHP/' . phpversion(),
 ];
 
-$sent = mail($recipient, $subject, $body, implode("\r\n", $headers));
+$sent = mail($recipient, $subject, $body, implode("\r\n", $headers), $mailReturnPath);
 
 if (!$sent) {
     http_response_code(500);
@@ -113,13 +116,27 @@ $confirmationBody = implode("\n", [
 ]);
 
 $confirmationHeaders = [
-    'From: Angelo Renovates <noreply@angelorenovates.be>',
+    'From: Angelo Renovates <info@angelorenovates.be>',
     'Reply-To: info@angelorenovates.be',
     'MIME-Version: 1.0',
     'Content-Type: text/plain; charset=UTF-8',
     'Content-Transfer-Encoding: 8bit',
+    'X-Mailer: PHP/' . phpversion(),
 ];
 
-mail($email, $confirmationSubject, $confirmationBody, implode("\r\n", $confirmationHeaders));
+$confirmationSent = mail(
+    $email,
+    $confirmationSubject,
+    $confirmationBody,
+    implode("\r\n", $confirmationHeaders),
+    $mailReturnPath,
+);
+
+if (!$confirmationSent) {
+    echo json_encode([
+        'message' => 'Bericht succesvol verzonden, maar de bevestigingsmail kon niet verzonden worden.',
+    ]);
+    exit;
+}
 
 echo json_encode(['message' => 'Bericht succesvol verzonden.']);
