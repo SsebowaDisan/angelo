@@ -53,7 +53,7 @@ export function ReviewsSection() {
             name: review.author.displayName,
             text: review.text,
             rating: review.rating,
-            meta: review.relativePublishTimeDescription || 'Google review',
+            meta: review.relativePublishTimeDescription || 'Google-review',
             authorUri: review.author.uri,
             authorPhotoUri: review.author.photoUri,
           })),
@@ -124,7 +124,7 @@ export function ReviewsSection() {
                 fontWeight: 500,
               }}
             >
-              Live Google reviews voor {businessName}
+              Live Google-reviews voor {businessName}
             </p>
           ) : null}
 

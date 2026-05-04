@@ -128,7 +128,7 @@ export function Projecten({ onOpenProjecten }: ProjectenProps) {
             <div className="absolute inset-0">
               <ImageWithFallback
                 src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=2400"
-                alt="Angelo Renovates Projects"
+                alt="Projecten van Angelo Renovates"
                 className="w-full h-full object-cover transition-all duration-[1.2s] ease-out group-hover:scale-105"
                 {...getResponsiveImageProps(
                   'https://images.unsplash.com/photo-1503387762-592deb58ef4e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=2400',
@@ -219,7 +219,7 @@ export function Projecten({ onOpenProjecten }: ProjectenProps) {
                         letterSpacing: '-0.022em',
                       }}
                     >
-                      Bekijk Alle Projecten
+                      Bekijk alle projecten
                       <motion.div
                         animate={{ x: [0, 4, 0] }}
                         transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
