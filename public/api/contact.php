@@ -69,19 +69,26 @@ if (reject_header_injection($name)) {
 
 $recipient = 'info@angelorenovates.be';
 $sender = 'info@angelorenovates.be';
+$businessPhone = '+32 478 06 27 48';
 $mailReturnPath = '-f' . $sender;
 $subject = 'Nieuwe contactaanvraag van ' . $name;
 $safePhone = $phone !== '' ? $phone : 'Niet opgegeven';
 
 $body = implode("\n", [
     'Nieuwe contactaanvraag via angelorenovates.be',
+    '============================================',
     '',
-    'Naam: ' . $name,
-    'E-mail: ' . $email,
+    'GEGEVENS VAN DE KLANT',
+    'Naam:     ' . $name,
+    'E-mail:   ' . $email,
     'Telefoon: ' . $safePhone,
     '',
-    'Bericht:',
+    'BERICHT VAN DE KLANT',
     $message,
+    '',
+    'CONTACTGEGEVENS ANGELO RENOVATES',
+    'E-mail:   ' . $sender,
+    'Telefoon: ' . $businessPhone,
 ]);
 
 $headers = [
@@ -101,15 +108,27 @@ if (!$sent) {
     exit;
 }
 
-$confirmationSubject = 'We hebben uw bericht ontvangen';
+$confirmationSubject = 'Bevestiging van uw bericht aan Angelo Renovates';
 $confirmationBody = implode("\n", [
     'Beste ' . $name,
     '',
-    'Bedankt voor uw bericht via angelorenovates.be.',
-    'Wij hebben uw aanvraag goed ontvangen en nemen zo snel mogelijk contact met u op.',
+    'Bedankt voor uw bericht via de website van Angelo Renovates.',
+    'Wij hebben uw aanvraag goed ontvangen.',
+    'Wij nemen zo snel mogelijk contact met u op.',
     '',
-    'Uw bericht:',
+    'UW GEGEVENS',
+    'Naam:     ' . $name,
+    'E-mail:   ' . $email,
+    'Telefoon: ' . $safePhone,
+    '',
+    'UW BERICHT',
     $message,
+    '',
+    'CONTACTGEGEVENS ANGELO RENOVATES',
+    'E-mail:   ' . $sender,
+    'Telefoon: ' . $businessPhone,
+    '',
+    'Heeft u nog extra informatie? Dan mag u altijd antwoorden op deze e-mail.',
     '',
     'Met vriendelijke groeten,',
     'Angelo Renovates',
