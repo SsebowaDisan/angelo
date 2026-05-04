@@ -98,4 +98,28 @@ if (!$sent) {
     exit;
 }
 
+$confirmationSubject = 'We hebben uw bericht ontvangen';
+$confirmationBody = implode("\n", [
+    'Beste ' . $name,
+    '',
+    'Bedankt voor uw bericht via angelorenovates.be.',
+    'Wij hebben uw aanvraag goed ontvangen en nemen zo snel mogelijk contact met u op.',
+    '',
+    'Uw bericht:',
+    $message,
+    '',
+    'Met vriendelijke groeten,',
+    'Angelo Renovates',
+]);
+
+$confirmationHeaders = [
+    'From: Angelo Renovates <noreply@angelorenovates.be>',
+    'Reply-To: info@angelorenovates.be',
+    'MIME-Version: 1.0',
+    'Content-Type: text/plain; charset=UTF-8',
+    'Content-Transfer-Encoding: 8bit',
+];
+
+mail($email, $confirmationSubject, $confirmationBody, implode("\r\n", $confirmationHeaders));
+
 echo json_encode(['message' => 'Bericht succesvol verzonden.']);
