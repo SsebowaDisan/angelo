@@ -75,11 +75,11 @@ export function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.2, delay: 0.2, ease: appleEase }}
-          className="mx-auto mb-1 max-w-sm break-words text-white tracking-[-0.03em] sm:max-w-none"
+          className="mx-auto mb-1 text-white tracking-[-0.03em]"
           style={{
-            fontSize: 'clamp(2.35rem, 9.25vw, 8rem)',
+            fontSize: 'clamp(2.5rem, 8vw, 7rem)',
             fontWeight: 300,
-            lineHeight: 1,
+            lineHeight: 1.05,
             fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif',
             WebkitFontSmoothing: 'antialiased',
             MozOsxFontSmoothing: 'grayscale',
@@ -93,11 +93,11 @@ export function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.2, delay: 0.4, ease: appleEase }}
-          className="mx-auto mb-8 max-w-sm break-words tracking-[-0.03em] sm:max-w-none"
+          className="mx-auto mb-8 tracking-[-0.03em]"
           style={{
-            fontSize: 'clamp(2.45rem, 9.75vw, 8rem)',
+            fontSize: 'clamp(2.6rem, 8.5vw, 7rem)',
             fontWeight: 600,
-            lineHeight: 1,
+            lineHeight: 1.05,
             fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif',
             WebkitFontSmoothing: 'antialiased',
             MozOsxFontSmoothing: 'grayscale',
