@@ -96,7 +96,7 @@ export function ServiceDetailPage({
       transition={{ duration: 0.4 }}
       ref={containerRef}
       id="service-detail-container"
-      className="fixed inset-0 z-[9999] overflow-y-auto bg-white"
+      className="fixed inset-0 z-[9999] overflow-x-hidden overflow-y-auto bg-white"
       style={{
         scrollBehavior: 'smooth',
       }}

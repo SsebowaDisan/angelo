@@ -29,7 +29,7 @@ export function WieBenIkPage({ onClose, onNavigate }: WieBenIkPageProps) {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.35, ease: appleEase }}
-      className="fixed inset-0 z-[100] bg-white overflow-y-auto"
+      className="fixed inset-0 z-[100] bg-white overflow-x-hidden overflow-y-auto"
       style={{ scrollBehavior: 'smooth' }}
     >
       {/* Header */}
@@ -51,8 +51,8 @@ export function WieBenIkPage({ onClose, onNavigate }: WieBenIkPageProps) {
           <ImageWithFallback 
             src={myHandsYourHomeImage}
             alt="Angelo Renovates bouwexpert en renovatiespecialist"
-            className="w-full h-full object-cover"
-            style={{ objectPosition: 'center' }}
+            className="h-full w-full object-cover"
+            style={{ objectPosition: '72% center' }}
             loading="eager"
             fetchPriority="high"
           />
@@ -90,9 +90,9 @@ export function WieBenIkPage({ onClose, onNavigate }: WieBenIkPageProps) {
             <h1
               className="mb-8"
               style={{
-                fontSize: 'clamp(4rem, 12vw, 9rem)',
+                fontSize: 'clamp(3rem, 12vw, 9rem)',
                 lineHeight: 0.9,
-                letterSpacing: '-0.06em',
+                letterSpacing: '-0.04em',
                 color: '#FFF',
                 textShadow: '0 4px 60px rgba(0, 0, 0, 0.5)',
               }}
@@ -360,8 +360,8 @@ export function WieBenIkPage({ onClose, onNavigate }: WieBenIkPageProps) {
         <div className="grid lg:grid-cols-2 min-h-[600px]">
           {/* Image Left */}
           <motion.div
-            initial={{ opacity: 0, x: -60 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 1, ease: appleEase }}
             className="relative h-[400px] lg:h-auto"
@@ -381,8 +381,8 @@ export function WieBenIkPage({ onClose, onNavigate }: WieBenIkPageProps) {
 
           {/* Text Right */}
           <motion.div
-            initial={{ opacity: 0, x: 60 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 1, ease: appleEase }}
             className="flex items-center px-8 lg:px-20 py-16 lg:py-24 bg-white"
@@ -588,8 +588,8 @@ export function WieBenIkPage({ onClose, onNavigate }: WieBenIkPageProps) {
         <div className="grid lg:grid-cols-2 min-h-[600px]">
           {/* Text Left (order reversed on desktop) */}
           <motion.div
-            initial={{ opacity: 0, x: -60 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 1, ease: appleEase }}
             className="flex items-center px-8 lg:px-20 py-16 lg:py-24 bg-black text-white order-2 lg:order-1"
@@ -642,8 +642,8 @@ export function WieBenIkPage({ onClose, onNavigate }: WieBenIkPageProps) {
 
           {/* Image Right */}
           <motion.div
-            initial={{ opacity: 0, x: 60 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 1, ease: appleEase }}
             className="relative h-[400px] lg:h-auto order-1 lg:order-2"

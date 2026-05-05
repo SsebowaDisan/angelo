@@ -17,7 +17,7 @@ export function ProjectenPage({ onNavigate, onClose }: ProjectenPageProps) {
   const filteredProjects = projects;
 
   return (
-    <div className="fixed inset-0 bg-black z-[9999] overflow-y-auto">
+    <div className="fixed inset-0 bg-black z-[9999] overflow-x-hidden overflow-y-auto">
       {/* Header */}
       <Header 
         currentPage="projecten"

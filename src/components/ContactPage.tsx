@@ -60,7 +60,7 @@ export function ContactPage({ onClose, onNavigate }: ContactPageProps) {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3, ease: appleEase }}
-      className="fixed inset-0 z-[9999] bg-white overflow-y-auto"
+      className="fixed inset-0 z-[9999] bg-white overflow-x-hidden overflow-y-auto"
     >
       {/* Header */}
       <Header 
@@ -94,7 +94,7 @@ export function ContactPage({ onClose, onNavigate }: ContactPageProps) {
           />
         </div>
 
-        <div className="relative container mx-auto px-6 py-12 lg:py-20">
+        <div className="relative container mx-auto px-4 py-12 sm:px-6 lg:py-20">
           <div className="max-w-7xl mx-auto">
             
             {/* Section Header - Centered */}
@@ -172,8 +172,8 @@ export function ContactPage({ onClose, onNavigate }: ContactPageProps) {
               
               {/* LEFT SIDE - Contact Cards (2/5 width) */}
               <motion.div
-                initial={{ opacity: 0, x: -40 }}
-                animate={{ opacity: 1, x: 0 }}
+                initial={{ opacity: 0, y: 32 }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1, delay: 0.2, ease: appleEase }}
                 className="lg:col-span-2 space-y-4"
               >
@@ -406,8 +406,8 @@ export function ContactPage({ onClose, onNavigate }: ContactPageProps) {
 
               {/* RIGHT SIDE - Contact Form (3/5 width) */}
               <motion.div
-                initial={{ opacity: 0, x: 40 }}
-                animate={{ opacity: 1, x: 0 }}
+                initial={{ opacity: 0, y: 32 }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1, delay: 0.3, ease: appleEase }}
                 className="lg:col-span-3"
               >

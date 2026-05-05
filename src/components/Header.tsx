@@ -432,7 +432,7 @@ export function Header({
               
               <motion.button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="w-10 h-10 rounded-full flex items-center justify-center text-white/90 hover:text-yellow-400 hover:bg-white/5 transition-colors duration-200"
+                className="w-10 h-10 rounded-full flex items-center justify-center border border-white/15 bg-white/10 text-white/90 hover:text-yellow-400 hover:bg-white/15 transition-colors duration-200"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 aria-label="Menu"

@@ -25,7 +25,7 @@ export function VoorwaardenPage({ onClose, onNavigate }: VoorwaardenPageProps) {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3 }}
-      className="fixed inset-0 z-[9999] bg-white overflow-y-auto"
+      className="fixed inset-0 z-[9999] bg-white overflow-x-hidden overflow-y-auto"
     >
       {/* Header */}
       <Header 

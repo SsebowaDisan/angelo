@@ -48,7 +48,7 @@ export function VerhuurPage({ onClose, onNavigate }: VerhuurPageProps) {
       animate={{ opacity: isExiting ? 0 : 1 }}
       transition={{ duration: 0.4 }}
       ref={containerRef}
-      className="fixed inset-0 z-[9999] overflow-y-auto bg-white"
+      className="fixed inset-0 z-[9999] overflow-x-hidden overflow-y-auto bg-white"
       style={{
         scrollBehavior: 'smooth',
       }}
@@ -99,7 +99,7 @@ export function VerhuurPage({ onClose, onNavigate }: VerhuurPageProps) {
 
         <motion.div
           style={{ scale: heroScale }}
-          className="relative z-10 text-center px-6 py-32"
+          className="relative z-10 w-full max-w-sm px-4 py-28 text-center sm:max-w-3xl sm:px-6 sm:py-32"
         >
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -131,7 +131,7 @@ export function VerhuurPage({ onClose, onNavigate }: VerhuurPageProps) {
               className="text-white mb-6"
               style={{
                 fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif',
-                fontSize: 'clamp(56px, 10vw, 120px)',
+                fontSize: 'clamp(48px, 10vw, 120px)',
                 fontWeight: 700,
                 letterSpacing: '-0.04em',
                 lineHeight: 1,
@@ -144,7 +144,7 @@ export function VerhuurPage({ onClose, onNavigate }: VerhuurPageProps) {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
-              className="text-white/60 mb-4"
+              className="mx-auto mb-4 max-w-xs text-white/60 sm:max-w-none"
               style={{
                 fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif',
                 fontSize: 'clamp(21px, 2.5vw, 28px)',
@@ -408,8 +408,8 @@ export function VerhuurPage({ onClose, onNavigate }: VerhuurPageProps) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
             {/* Left Image */}
             <motion.div
-              initial={{ opacity: 0, x: -40 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 32 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 1.2, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
               className="relative group cursor-pointer"
@@ -466,8 +466,8 @@ export function VerhuurPage({ onClose, onNavigate }: VerhuurPageProps) {
 
             {/* Right Image */}
             <motion.div
-              initial={{ opacity: 0, x: 40 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 32 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 1.2, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
               className="relative group cursor-pointer"
@@ -689,8 +689,8 @@ export function VerhuurPage({ onClose, onNavigate }: VerhuurPageProps) {
               ].map((spec, index) => (
                 <motion.div
                   key={index}
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: index * 0.05, ease: [0.22, 1, 0.36, 1] }}
                   className="flex justify-between items-baseline py-4 border-b border-[#d2d2d7]"

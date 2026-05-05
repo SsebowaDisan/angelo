@@ -105,7 +105,7 @@ export function DienstenPage({
   onNavigate
 }: DienstenPageProps) {
   return (
-    <div className="fixed inset-0 bg-black z-[9999] overflow-y-auto">
+    <div className="fixed inset-0 bg-black z-[9999] overflow-x-hidden overflow-y-auto">
       {/* Header */}
       <Header 
         currentPage="diensten"
