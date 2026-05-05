@@ -51,7 +51,7 @@ export function Hero() {
       
       {/* Main Content - Ultra Refined */}
       <motion.div 
-        className="relative z-10 text-center px-6 max-w-[1400px] mx-auto"
+        className="relative z-10 mx-auto w-full max-w-[1400px] overflow-hidden px-4 text-center sm:px-6"
         style={{ opacity }}
       >
         <motion.p
@@ -75,28 +75,29 @@ export function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.2, delay: 0.2, ease: appleEase }}
-          className="text-white mb-1 tracking-[-0.03em]"
+          className="mx-auto mb-1 max-w-[22rem] break-words text-white tracking-[-0.03em] sm:max-w-full"
           style={{
-            fontSize: 'clamp(3.5rem, 11vw, 8rem)',
+            fontSize: 'clamp(2.35rem, 9.25vw, 8rem)',
             fontWeight: 300,
-            lineHeight: 1.05,
+            lineHeight: 1,
             fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif',
             WebkitFontSmoothing: 'antialiased',
             MozOsxFontSmoothing: 'grayscale',
           }}
         >
-          Uw droomhuis.
+          <span className="block sm:inline">Uw</span>{' '}
+          <span className="block sm:inline">droomhuis.</span>
         </motion.h1>
 
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.2, delay: 0.4, ease: appleEase }}
-          className="mb-8 tracking-[-0.03em]"
+          className="mx-auto mb-8 max-w-[22rem] break-words tracking-[-0.03em] sm:max-w-full"
           style={{
-            fontSize: 'clamp(3.5rem, 11vw, 8rem)',
+            fontSize: 'clamp(2.45rem, 9.75vw, 8rem)',
             fontWeight: 600,
-            lineHeight: 1.05,
+            lineHeight: 1,
             fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif',
             WebkitFontSmoothing: 'antialiased',
             MozOsxFontSmoothing: 'grayscale',

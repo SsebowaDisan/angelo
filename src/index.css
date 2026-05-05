@@ -4215,6 +4215,14 @@
 
 html {
   font-size: var(--font-size);
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+body,
+#root {
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 .overflow-x-auto::-webkit-scrollbar {
